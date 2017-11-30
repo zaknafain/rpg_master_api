@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe ContentText, type: :model do
+describe ContentText do
   let(:campaign)     { FactoryBot.create(:campaign) }
   let(:element)      { FactoryBot.create(:hierarchy_element, hierarchable: campaign, visibility: :for_everyone) }
   let(:content_text) { FactoryBot.create(:content_text, hierarchy_element: element,  visibility: :for_everyone) }

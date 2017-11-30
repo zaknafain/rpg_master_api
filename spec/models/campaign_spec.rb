@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe Campaign, type: :model do
+describe Campaign do
   let(:campaign) { FactoryBot.create(:campaign, hierarchy_elements: [element], is_public: false) }
   let(:element)  { FactoryBot.create(:hierarchy_element) }
   let!(:player)  { FactoryBot.create(:user, campaigns_played: [campaign]) }

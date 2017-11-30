@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe User, type: :model do
+describe User do
   let(:user)              { FactoryBot.build(:user, name: "Example User",
                                                      email: "user@example.com",
                                                      password: "foobar Z",

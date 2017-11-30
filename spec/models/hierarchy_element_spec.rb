@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe HierarchyElement, type: :model do
+describe HierarchyElement do
   let(:campaign)  { FactoryBot.create(:campaign) }
   let(:element_a) { FactoryBot.create(:hierarchy_element, hierarchable: campaign,  visibility: :for_everyone) }
   let(:element_b) { FactoryBot.create(:hierarchy_element, hierarchable: element_a, visibility: :for_all_players) }

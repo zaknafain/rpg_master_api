@@ -10,6 +10,7 @@ gem 'pg', '~> 0.21.0'
 gem 'puma', '~> 3.7'
 gem 'bcrypt', '~> 3.1.7'
 gem 'rack-cors'
+gem 'knock'
 
 gem 'ffaker'
 

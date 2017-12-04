@@ -23,6 +23,10 @@ class User < ApplicationRecord
   before_save { email.downcase! }
   before_save :create_remember_token
 
+  def to_token_payload
+    { name: name, id: id }
+  end
+
   def players
     campaigns.includes(:players).map(&:players).flatten.uniq(&:email).sort!{ |x,y| x.email <=> y.email }
   end

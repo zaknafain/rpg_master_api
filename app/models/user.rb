@@ -24,7 +24,7 @@ class User < ApplicationRecord
   before_save :create_remember_token
 
   def to_token_payload
-    { name: name, id: id }
+    { sub: id, name: name }
   end
 
   def players

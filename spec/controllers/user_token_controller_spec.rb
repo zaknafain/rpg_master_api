@@ -22,15 +22,25 @@ RSpec.describe UserTokenController do
 
       expect(response.body).to include("jwt")
     end 
+
+    it 'responds with a sub that equals the id' do
+      post :create, params: { "auth" => { "email" => user.email, "password" => "secret pee" }}
+      
+      body = JSON.parse(response.body)
+      jwt = body['jwt']
+      decoded_jwt = JWT.decode(jwt, Rails.application.secrets.secret_key_base, true, { algorithm: 'HS256' })
+
+      expect(decoded_jwt[0]).to include("sub" => user.id)
+    end
     
     it 'responds with a user name and id' do
       post :create, params: { "auth" => { "email" => user.email, "password" => "secret pee" }}
+      
       body = JSON.parse(response.body)
       jwt = body['jwt']
       decoded_jwt = JWT.decode(jwt, Rails.application.secrets.secret_key_base, true, { algorithm: 'HS256' })
 
       expect(decoded_jwt[0]).to include("name" => user.name)
-      expect(decoded_jwt[0]).to include("id" => user.id)
     end
   end
 

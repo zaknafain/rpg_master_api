@@ -11,6 +11,7 @@ gem 'puma', '~> 3.7'
 gem 'bcrypt', '~> 3.1.7'
 gem 'rack-cors'
 gem 'knock'
+gem "active_model_serializers", require: true
 
 gem 'ffaker'
 

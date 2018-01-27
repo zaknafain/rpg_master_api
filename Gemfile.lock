@@ -63,7 +63,7 @@ GEM
     ffi (1.9.18)
     globalid (0.4.1)
       activesupport (>= 4.2.0)
-    i18n (0.9.1)
+    i18n (0.9.3)
       concurrent-ruby (~> 1.0)
     jsonapi-renderer (0.2.0)
     jwt (1.5.6)
@@ -83,11 +83,11 @@ GEM
     method_source (0.9.0)
     mini_mime (1.0.0)
     mini_portile2 (2.3.0)
-    minitest (5.11.1)
+    minitest (5.11.3)
+    mysql2 (0.4.10)
     nio4r (2.2.0)
     nokogiri (1.8.1)
       mini_portile2 (~> 2.3.0)
-    pg (0.21.0)
     pry (0.11.3)
       coderay (~> 1.1.0)
       method_source (~> 0.9.0)
@@ -168,17 +168,17 @@ PLATFORMS
 
 DEPENDENCIES
   active_model_serializers
-  bcrypt (~> 3.1.7)
+  bcrypt
   database_cleaner
   factory_bot_rails
   ffaker
   knock
   listen (>= 3.0.5, < 3.2)
-  pg (~> 0.21.0)
+  mysql2
   pry-rails
-  puma (~> 3.7)
+  puma
   rack-cors
-  rails (~> 5.1.4)
+  rails
   rspec-rails
   spring
   spring-watcher-listen (~> 2.0.0)

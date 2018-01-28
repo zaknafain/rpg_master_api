@@ -31,7 +31,7 @@ ActiveRecord::Schema.define(version: 20161228212306) do
 
   create_table "content_texts", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.text "content", null: false
-    t.integer "order"
+    t.integer "ordering"
     t.integer "visibility", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

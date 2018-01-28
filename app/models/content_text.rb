@@ -6,7 +6,7 @@ class ContentText < ApplicationRecord
   validates :content, presence: true
   validates :hierarchy_element, presence: true
 
-  scope :ordered, ->{ order(order: :asc, id: :asc) }
+  scope :ordered, ->{ order('ordering IS NULL, ordering ASC') }
 
   def campaign
     parent.top_hierarchable

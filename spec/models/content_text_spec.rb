@@ -10,13 +10,16 @@ describe ContentText do
 
   describe "scopes" do
     describe "ordered" do
-      it "sorts by order asc and id asc" do
+      it "sorts by ordering asc and id asc" do
         content_text_n1 = FactoryBot.create(:content_text, hierarchy_element: element)
         content_text_n2 = FactoryBot.create(:content_text, hierarchy_element: element)
-        content_text_o2 = FactoryBot.create(:content_text, hierarchy_element: element, order: 2)
-        content_text_o1 = FactoryBot.create(:content_text, hierarchy_element: element, order: 1)
+        content_text_o2 = FactoryBot.create(:content_text, hierarchy_element: element, ordering: 2)
+        content_text_o1 = FactoryBot.create(:content_text, hierarchy_element: element, ordering: 1)
+        ordered_ids = element.content_texts.ordered.map(&:id)
 
-        expect(element.content_texts.ordered).to eq([content_text_o1, content_text_o2, content_text_n1, content_text_n2])
+        expect(ordered_ids.index(content_text_o1.id) < ordered_ids.index(content_text_o2.id)).to be_truthy
+        expect(ordered_ids.index(content_text_o2.id) < ordered_ids.index(content_text_n1.id)).to be_truthy
+        expect(ordered_ids.index(content_text_n1.id) < ordered_ids.index(content_text_n2.id)).to be_truthy
       end
     end
   end

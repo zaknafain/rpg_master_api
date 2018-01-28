@@ -6,6 +6,8 @@ class UsersController < ApplicationController
   end
 
   def show
-    render json:  User.find(params('id')).to_json
-  end 
+    user = User.find(params['id'].to_i)
+
+    render json:  user.to_json
+  end
 end

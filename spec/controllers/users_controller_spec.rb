@@ -31,14 +31,14 @@ RSpec.describe UsersController do
   describe "GET show" do
     it "returns the user as json" do
       request.headers.merge! authenticated_header
-      get :show, id: user.id
+      get :show, params: { id: user.id }
 
       expect(response.status).to eq(200)
       expect(response.body).to include(user.name)
     end
 
     it 'needs authentication' do
-      get :show, id: user.id
+      get :show, params: { id: user.id }
 
       expect(response.status).to eq(401)
     end

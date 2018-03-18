@@ -36,3 +36,47 @@ RSpec.configure do |config|
     end
   end
 end
+
+RSpec::Matchers.define :be_of_correct_schema do |schema_name, owned_id, as_admin|
+  match do |actual|
+    parsed_response = JSON.parse(actual)
+    parsed_response = [parsed_response] unless parsed_response.is_a?(Array)
+
+    validations = parsed_response.map do |single|
+      schema = load_schema_file(single, schema_name, owned_id, as_admin)
+
+      collect_schema_validations(single, schema)
+    end
+
+    validations.flatten.all?{ |v| v == true }
+  end
+
+  failure_message{ |a| "expected that #{a} would be of schema #{schema_name}" }
+
+  def load_schema_file(parsed_item, schema_name, owned_id, as_admin)
+    if as_admin
+      schema_name = "#{schema_name}_admin"
+    elsif owned_id == parsed_item["id"]
+      schema_name = "#{schema_name}_owner"
+    end
+
+    File.read("spec/fixtures/schemas/#{schema_name}.json")
+  end
+
+  def collect_schema_validations(parsed_response, schema)
+    expected_schema = JSON.parse(schema)["properties"]
+    keys = (expected_schema.keys + parsed_response.keys).uniq
+
+    keys.map do |key|
+      types = expected_schema.dig(key, "types") || [expected_schema.dig(key, "type")]
+
+      types.any?{ |t| t == parsed_response[key].class.to_s }
+    end
+  end
+end
+
+def auth_header(user)
+  token = Knock::AuthToken.new(payload: { sub: user.id, name: user.name }).token
+
+  { 'Authorization': "Bearer #{token}" }
+end

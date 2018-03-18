@@ -1,0 +1,28 @@
+{
+  "title": "User",
+  "description": "A user with attributes as admin",
+  "type": "object",
+  "properties": {
+    "id": {
+        "type": "Integer"
+    },
+    "name": {
+        "type": "String"
+    },
+    "admin": {
+      "types": ["TrueClass", "FalseClass"]
+    },
+    "email": {
+        "type": "String"
+    },
+    "locale": {
+        "type": "String"
+    },
+    "created_at": {
+        "type": "String"
+    },
+    "updated_at": {
+        "type": "String"
+    }
+  }
+}

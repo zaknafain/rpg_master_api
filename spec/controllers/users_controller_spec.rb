@@ -49,4 +49,41 @@ RSpec.describe UsersController do
       expect(response.status).to eq(401)
     end
   end
+
+  describe "DELETE destroy" do
+    before(:each) do
+      owner
+    end
+
+    it "as normal user it returns not allowed" do
+      request.headers.merge! auth_header(user)
+      delete :destroy, params: { id: owner.id }
+
+      expect(response.status).to eq(401)
+    end
+
+    it "as owner it returns not allowed" do
+      request.headers.merge! auth_header(owner)
+      delete :destroy, params: { id: owner.id }
+
+      expect(response.status).to eq(401)
+    end
+
+    it "as admin it returns ok and destroys the user" do
+      request.headers.merge! auth_header(admin)
+
+      expect{
+        delete :destroy, params: { id: owner.id }
+      }.to change{
+        User.count
+      }.by(-1)
+      expect(response.status).to eq(200)
+    end
+
+    it 'needs authentication' do
+      delete :destroy, params: { id: user.id }
+
+      expect(response.status).to eq(401)
+    end
+  end
 end

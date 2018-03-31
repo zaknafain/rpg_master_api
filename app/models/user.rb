@@ -42,3 +42,7 @@ class User < ApplicationRecord
   end
 
 end
+
+class Admin < User
+  default_scope { where(admin: true) }
+end

@@ -50,6 +50,31 @@ RSpec.describe UsersController do
     end
   end
 
+  describe "POST update" do
+    it "updates the requested attributes" do
+      request.headers.merge! auth_header(owner)
+
+      put :update, params: { id: owner.id, user: { name: "New Name", email: "new.email@changed.de" } }
+
+      expect(response.status).to eq(204)
+      expect(owner.reload.name).to eq("New Name")
+      expect(owner.email).to eq("new.email@changed.de")
+    end
+
+    it 'needs authentication' do
+      put :update, params: { id: owner.id, user: { name: "New Name" } }
+
+      expect(response.status).to eq(401)
+    end
+
+    it 'does not update if wrong user reqested' do
+      request.headers.merge! auth_header(user)
+      put :update, params: { id: owner.id, user: { name: "New Name" } }
+
+      expect(response.status).to eq(403)
+    end
+  end
+
   describe "DELETE destroy" do
     before(:each) do
       owner
@@ -69,7 +94,7 @@ RSpec.describe UsersController do
       expect(response.status).to eq(401)
     end
 
-    it "as admin it returns ok and destroys the user" do
+    it "as admin it returns no content and destroys the user" do
       request.headers.merge! auth_header(admin)
 
       expect{
@@ -77,7 +102,7 @@ RSpec.describe UsersController do
       }.to change{
         User.count
       }.by(-1)
-      expect(response.status).to eq(200)
+      expect(response.status).to eq(204)
     end
 
     it 'needs authentication' do

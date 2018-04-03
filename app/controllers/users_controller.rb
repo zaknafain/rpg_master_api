@@ -10,9 +10,19 @@ class UsersController < ApplicationController
     render json: user
   end
 
+  def update
+    head :forbidden and return if current_user.id != user.id
+
+    if user.update_attributes(user_params)
+      head :no_content
+    else
+      head :bad_request
+    end
+  end
+
   def destroy
     if user.destroy
-      head :ok
+      head :no_content
     else
       head :bad_request
     end
@@ -22,5 +32,9 @@ class UsersController < ApplicationController
 
   def user
     @user ||= User.find(params['id'].to_i)
+  end
+
+  def user_params
+    params.require(:user).permit(:password, :password_confirmation, :email, :name)
   end
 end

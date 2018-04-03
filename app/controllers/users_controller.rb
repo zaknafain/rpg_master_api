@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
   before_action :authenticate_user
+  before_action :authenticate_owner, only: [:update]
   before_action :authenticate_admin, only: [:destroy]
 
   def index
@@ -11,8 +12,6 @@ class UsersController < ApplicationController
   end
 
   def update
-    head :forbidden and return if current_user.id != user.id
-
     if user.update_attributes(user_params)
       head :no_content
     else
@@ -29,6 +28,10 @@ class UsersController < ApplicationController
   end
 
   private
+
+  def authenticate_owner
+    head :forbidden and return unless current_user.id == user.id || current_user.admin?
+  end
 
   def user
     @user ||= User.find(params['id'].to_i)

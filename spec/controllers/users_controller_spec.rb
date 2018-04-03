@@ -73,6 +73,14 @@ RSpec.describe UsersController do
 
       expect(response.status).to eq(403)
     end
+
+    it 'updates the user when requested by an admin' do
+      request.headers.merge! auth_header(admin)
+      put :update, params: { id: owner.id, user: { name: "New Name" } }
+
+      expect(response.status).to eq(204)
+      expect(owner.reload.name).to eq("New Name")
+    end
   end
 
   describe "DELETE destroy" do

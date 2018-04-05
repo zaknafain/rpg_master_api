@@ -50,6 +50,26 @@ RSpec.describe UsersController do
     end
   end
 
+  describe "GET me" do
+    %i(user owner admin).each do |current|
+      describe "as #{current}" do
+        it "returns the current user as json" do
+          request.headers.merge! auth_header(send(current))
+          get :me
+
+          expect(response.status).to eq(200)
+          expect(response.body).to   be_of_correct_schema(:user, send(current).id, send(current).admin)
+        end
+      end
+    end
+
+    it 'needs authentication' do
+      get :me
+
+      expect(response.status).to eq(401)
+    end
+  end
+
   describe "POST update" do
     it "updates the requested attributes" do
       request.headers.merge! auth_header(owner)

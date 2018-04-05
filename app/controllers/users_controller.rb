@@ -11,6 +11,10 @@ class UsersController < ApplicationController
     render json: user
   end
 
+  def me
+    render json: current_user
+  end
+
   def update
     if user.update_attributes(user_params)
       head :no_content

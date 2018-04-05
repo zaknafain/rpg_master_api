@@ -9,7 +9,7 @@ gem 'rails'
 gem 'mysql2'
 gem 'puma'
 gem 'bcrypt'
-gem 'rack-cors'
+gem 'rack-cors', :require => 'rack/cors'
 gem 'knock'
 gem "active_model_serializers", require: true
 

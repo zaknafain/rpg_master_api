@@ -70,7 +70,7 @@ RSpec.describe UsersController do
     end
   end
 
-  describe "POST update" do
+  describe "PUT update" do
     it "updates the requested attributes" do
       request.headers.merge! auth_header(owner)
 

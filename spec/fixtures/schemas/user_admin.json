@@ -18,10 +18,10 @@
     "locale": {
         "type": "String"
     },
-    "created_at": {
+    "createdAt": {
         "type": "String"
     },
-    "updated_at": {
+    "updatedAt": {
         "type": "String"
     }
   }

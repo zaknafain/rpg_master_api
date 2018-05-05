@@ -19,7 +19,7 @@ class User < ApplicationRecord
   validates :email, presence: true, format: { with: VALID_EMAIL_REGEX }, uniqueness: { case_sensitive: false }
   validates :password, length: { minimum: 8 }, if: :password_length_is_needed?
 
-  after_validation  { self.errors.messages.delete(:password_digest) }
+  after_validation { errors.messages.delete(:password_digest) }
   before_save { email.downcase! }
   before_save :create_remember_token
 
@@ -38,7 +38,7 @@ class User < ApplicationRecord
   end
 
   def password_length_is_needed?
-    !(self.persisted? && password.blank?)
+    !(persisted? && password.blank?)
   end
 
 end

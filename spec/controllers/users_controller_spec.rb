@@ -81,6 +81,14 @@ RSpec.describe UsersController do
       expect(owner.email).to eq("new.email@changed.de")
     end
 
+    it "does not update when the passwords are not the same" do
+      request.headers.merge! auth_header(owner)
+
+      put :update, params: { id: owner.id, user: { password: 'bingo', password_confirmation: 'bongo' } }
+
+      expect(response.status).to eq(400)
+    end
+
     it 'needs authentication' do
       put :update, params: { id: owner.id, user: { name: "New Name" } }
 

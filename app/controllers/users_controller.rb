@@ -16,7 +16,7 @@ class UsersController < ApplicationController
   end
 
   def update
-    if user.update_attributes(user_params)
+    if user_params[:password] == user_params[:password_confirmation] && user.update_attributes(user_params)
       head :no_content
     else
       head :bad_request
@@ -42,6 +42,6 @@ class UsersController < ApplicationController
   end
 
   def user_params
-    params.require(:user).permit(:password, :password_confirmation, :email, :name)
+    params.require(:user).permit(:password, :password_confirmation, :email, :name, :locale)
   end
 end

@@ -5,10 +5,11 @@ RUN apk add --no-cache --update build-base \
                                 linux-headers \
                                 tzdata \
                                 bash \
-                                mysql-dev \
-                                git
+                                mysql-dev
 
-# Added dockerize for circleci 2.0 command to wait for DB to be up
+# Added some more for CCI 2.0
+RUN apk add --no-cache --update git \
+                                openssh-client
 ENV DOCKERIZE_VERSION v0.6.0
 RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
     && tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \

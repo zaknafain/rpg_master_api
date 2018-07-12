@@ -5,7 +5,8 @@ RUN apk add --no-cache --update build-base \
                                 linux-headers \
                                 tzdata \
                                 bash \
-                                mysql-dev
+                                mysql-dev \
+                                git
 
 # Added dockerize for circleci 2.0 command to wait for DB to be up
 ENV DOCKERIZE_VERSION v0.6.0

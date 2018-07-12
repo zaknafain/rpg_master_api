@@ -2,7 +2,7 @@ version: 2.0
 jobs:
   build:
     docker:
-      - image: zaknafain/stacks_api:0.2
+      - image: zaknafain/stacks_api:0.3
       - image: circleci/mysql:5.7
       - image: redis:4.0
     environment:
@@ -40,7 +40,7 @@ jobs:
           name: Save gem cache
           key: bundle-{{ checksum "Gemfile.lock" }}
           paths:
-            - vendor/bundle
+            - /usr/local/bundle
       - run:
           name: Wait for DB
           command: dockerize -wait tcp://localhost:3306 -timeout 1m

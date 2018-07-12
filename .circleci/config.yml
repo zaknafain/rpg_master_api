@@ -27,7 +27,7 @@ jobs:
             - ~/project
       - run:
           name: Bundler version
-          command: gem env
+          command: bundler -v
       - restore_cache:
           name: Restore gem cache
           keys:

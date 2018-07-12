@@ -1,5 +1,4 @@
 class User < ApplicationRecord
-
   has_many :campaigns, dependent: :destroy
 
   has_many :campaigns_users
@@ -20,7 +19,7 @@ class User < ApplicationRecord
   validates :password, length: { minimum: 8 }, if: :password_length_is_needed?
 
   after_validation { errors.messages.delete(:password_digest) }
-  before_save { email.downcase! }
+  before_save :downcase_email
   before_save :create_remember_token
 
   def to_token_payload
@@ -41,6 +40,9 @@ class User < ApplicationRecord
     !(persisted? && password.blank?)
   end
 
+  def downcase_email
+    email.downcase!
+  end
 end
 
 class Admin < User

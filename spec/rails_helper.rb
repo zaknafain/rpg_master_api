@@ -78,5 +78,5 @@ end
 def auth_header(user)
   token = Knock::AuthToken.new(payload: { sub: user.id, name: user.name }).token
 
-  { 'Authorization': "Bearer #{token}" }
+  { 'Authorization' => "Bearer #{token}" }
 end

@@ -10,9 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161228212306) do
+ActiveRecord::Schema.define(version: 2016_12_28_212306) do
 
-  create_table "campaigns", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+  create_table "campaigns", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "name", null: false
     t.integer "user_id", null: false
     t.text "short_description"
@@ -23,13 +23,13 @@ ActiveRecord::Schema.define(version: 20161228212306) do
     t.index ["user_id"], name: "index_campaigns_on_user_id"
   end
 
-  create_table "campaigns_users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+  create_table "campaigns_users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "campaign_id", null: false
     t.integer "user_id", null: false
     t.index ["campaign_id", "user_id"], name: "index_campaigns_users_on_campaign_id_and_user_id", unique: true
   end
 
-  create_table "content_texts", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+  create_table "content_texts", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.text "content", null: false
     t.integer "ordering"
     t.integer "visibility", default: 0, null: false
@@ -40,7 +40,7 @@ ActiveRecord::Schema.define(version: 20161228212306) do
     t.index ["visibility"], name: "index_content_texts_on_visibility"
   end
 
-  create_table "content_texts_users", id: false, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+  create_table "content_texts_users", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.bigint "content_text_id", null: false
     t.bigint "user_id", null: false
     t.index ["content_text_id", "user_id"], name: "content_texts_users_uniqueness", unique: true
@@ -48,7 +48,7 @@ ActiveRecord::Schema.define(version: 20161228212306) do
     t.index ["user_id"], name: "index_content_texts_users_on_user_id"
   end
 
-  create_table "hierarchy_elements", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+  create_table "hierarchy_elements", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "name", null: false
     t.integer "visibility", default: 0, null: false
     t.text "description"
@@ -60,7 +60,7 @@ ActiveRecord::Schema.define(version: 20161228212306) do
     t.index ["visibility"], name: "index_hierarchy_elements_on_visibility"
   end
 
-  create_table "hierarchy_elements_users", id: false, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+  create_table "hierarchy_elements_users", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.bigint "hierarchy_element_id", null: false
     t.bigint "user_id", null: false
     t.index ["hierarchy_element_id", "user_id"], name: "hierarchy_elements_users_uniqueness", unique: true
@@ -68,7 +68,7 @@ ActiveRecord::Schema.define(version: 20161228212306) do
     t.index ["user_id"], name: "index_hierarchy_elements_users_on_user_id"
   end
 
-  create_table "users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+  create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "name", null: false
     t.string "email", null: false
     t.string "password_digest", null: false

@@ -7,8 +7,7 @@
 # Ignore bundler config.
 /.bundle
 
-# Ignore the database credentials.
-/config/database.yml
+.env
 /config/secrets.yml
 
 # Ignore all logfiles and tempfiles.

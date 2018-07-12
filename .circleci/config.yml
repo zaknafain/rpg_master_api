@@ -8,9 +8,9 @@ jobs:
     environment:
       - RAILS_ENV: test
       - RACK_ENV: test
-      - MYSQL_TEST_HOST: 127.0.0.4
-      - MYSQL_TEST_USERNAME: root
-      - MYSQL_TEST_PASSWORD: ''
+      - MYSQL_HOST: 127.0.0.4
+      - MYSQL_USERNAME: root
+      - MYSQL_PASSWORD: ''
       - GOOGLE_API_KEY: NOTAKEY
       - REDIS_URL: redis://localhost:6379/
     steps:

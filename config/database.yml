@@ -1,15 +1,15 @@
 development:
   adapter: mysql2
   database: rpg_master_development
-  host: <%= ENV['MYSQL_TEST_HOST'] %>
+  host: <%= ENV['MYSQL_HOST'] %>
   pool: 5
-  username: <%= ENV['MYSQL_TEST_USERNAME'] %>
-  password: <%= ENV['MYSQL_TEST_PASSWORD'] %>
+  username: <%= ENV['MYSQL_USERNAME'] %>
+  password: <%= ENV['MYSQL_PASSWORD'] %>
 
 test:
   adapter: mysql2
   database: rpg_master_test
-  host: <%= ENV['MYSQL_TEST_HOST'] %>
+  host: <%= ENV['MYSQL_HOST'] %>
   pool: 5
-  username: <%= ENV['MYSQL_TEST_USERNAME'] %>
-  password: <%= ENV['MYSQL_TEST_PASSWORD'] %>
+  username: <%= ENV['MYSQL_USERNAME'] %>
+  password: <%= ENV['MYSQL_PASSWORD'] %>

@@ -4,7 +4,6 @@ jobs:
     docker:
       - image: zaknafain/stacks_api:0.4
       - image: circleci/mysql:5.7
-      - image: redis:4.0
     environment:
       - RAILS_ENV: test
       - RACK_ENV: test
@@ -12,7 +11,6 @@ jobs:
       - MYSQL_USERNAME: root
       - MYSQL_PASSWORD: ''
       - GOOGLE_API_KEY: NOTAKEY
-      - REDIS_URL: redis://localhost:6379/
     steps:
       - restore_cache:
           name: Restore code cache

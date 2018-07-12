@@ -45,12 +45,13 @@ jobs:
       - run:
           name: Add dummy secrets
           command: 'echo -e "test:\n  secret_key_base: SOMEFUNKYSECRET" > config/secrets.yml'
-      - type: shell
-        command: |
-          bundle exec rspec --profile 10 \
-                            --format RspecJunitFormatter \
-                            --out test_results/rspec.xml \
-                            --format progress
+      - run:
+          name: bundle exec rspec
+          command: |
+            bundle exec rspec --profile 10 \
+                              --format RspecJunitFormatter \
+                              --out test_results/rspec.xml \
+                              --format progress
       - save_cache:
           name: Save test results
           key: test-results-{{ .Branch }}-{{ .Revision }}

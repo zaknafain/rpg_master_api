@@ -48,7 +48,7 @@ jobs:
           name: Database setup
           command: bundle exec rake db:create db:schema:load
       - type: shell
-        command: echo -e "test:\n  secret_key_base: SOMEFUNKYSECRET" > config/secrets.yml
+        command: 'echo -e "test:\n  secret_key_base: SOMEFUNKYSECRET" > config/secrets.yml'
       - type: shell
         command: |
           bundle exec rspec --profile 10 \

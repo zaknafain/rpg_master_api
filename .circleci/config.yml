@@ -1,0 +1,64 @@
+version: 2.0
+jobs:
+  build:
+    docker:
+      - image: zaknafain/stacks_api:0.1
+      - image: circleci/mysql:5.7
+      - image: redis:4.0
+    environment:
+      - RAILS_ENV: test
+      - RACK_ENV: test
+      - MYSQL_TEST_HOST: mysql
+      - MYSQL_TEST_USERNAME: root
+      - MYSQL_TEST_PASSWORD: ''
+      - GOOGLE_API_KEY: NOTAKEY
+      - REDIS_URL: redis://localhost:6379/
+    steps:
+      - restore_cache:
+          name: Restore code cache
+          keys:
+            - repo-{{ .Branch }}-{{ .Revision }}
+            - repo-{{ .Branch }}-
+            - repo-
+      - checkout
+      - save_cache:
+          key: repo-{{ .Branch }}-{{ .Revision }}
+          paths:
+            - ~/project
+      - run:
+          name: Bundler version
+          command: bundle -v
+      - restore_cache:
+          name: Restore gem cache
+          keys:
+            - bundle-{{ checksum "Gemfile.lock" }}
+            - bundle-
+      - run:
+          name: Bundle install
+          command: bundle install --without development staging
+      - save_cache:
+          name: Save gem cache
+          key: bundle-{{ checksum "Gemfile.lock" }}
+          paths:
+            - vendor/bundle
+      - run:
+          name: Wait for DB
+          command: dockerize -wait tcp://localhost:3306 -timeout 1m
+      - run:
+          name: Database setup
+          command: bundle exec rake db:create db:schema:load
+      - type: shell
+        command: |
+          bundle exec rspec --profile 10 \
+                            --format RspecJunitFormatter \
+                            --out test_results/rspec.xml \
+                            --format progress
+      - save_cache:
+          name: Save test results
+          key: test-results-{{ .Branch }}-{{ .Revision }}
+          paths:
+            - test_results
+      - store_artifacts:
+          path: test_results/rspec.xml
+      - store_test_results:
+          path: test_results/rspec.xml

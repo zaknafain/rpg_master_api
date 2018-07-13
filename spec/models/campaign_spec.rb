@@ -3,9 +3,13 @@ require 'rails_helper'
 describe Campaign do
   let(:element)  { FactoryBot.create(:hierarchy_element) }
   let(:campaign) { element.hierarchable }
-  let!(:player)  { FactoryBot.create(:user, campaigns_played: [campaign]) }
+  let(:player)   { FactoryBot.create(:user) }
 
   subject { campaign }
+
+  before(:each) do
+    player.campaigns_played << campaign
+  end
 
   describe 'all_campaigns_for user' do
     let!(:campaign_2) { FactoryBot.create(:campaign, user: player) }

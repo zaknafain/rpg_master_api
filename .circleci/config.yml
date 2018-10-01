@@ -2,7 +2,7 @@ version: 2.0
 jobs:
   build:
     docker:
-      - image: zaknafain/stacks_api:0.4
+      - image: zaknafain/stacks_api:0.5
       - image: circleci/mysql:5.7
     environment:
       - RAILS_ENV: test

@@ -1,24 +1,21 @@
-# README
+# RPGMaster API
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+[![Depfu](https://badges.depfu.com/badges/566158abd22388e1b9476df7036651dc/overview.svg)](https://depfu.com/github/zaknafain/rpg_master_api?project=Bundler)
+[![CircleCI](https://circleci.com/gh/zaknafain/rpg_master_api.svg?style=svg)](https://circleci.com/gh/zaknafain/rpg_master_api)
+[![Maintainability](https://api.codeclimate.com/v1/badges/df3e8e839b75939b070b/maintainability)](https://codeclimate.com/github/zaknafain/rpg_master_api/maintainability)
 
-Things you may want to cover:
+The API for RPGMaster is written in ruby with rails and covers the following:
 
-* Ruby version
+**Done:**
 
-* System dependencies
++ [x] Move old models from old codebase
++ [x] Added authentication via tokens
++ [x] Added users controller to list, show, create, update and destroy users
 
-* Configuration
+**ToDo:**
 
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
++ [ ] Add campaign controller to list, show, create, update and destroy campaigns
++ [ ] Add hierarchy element controller to list, show, create, update and destroy hierarchy elements
++ [ ] Add content text controller to list, show, create, update and destroy content texts
++ [ ] Add ability to reorder content texts
++ [ ] Add ability to reorder hierarchy elements

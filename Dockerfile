@@ -1,4 +1,4 @@
-FROM ruby:2.5.1-alpine3.7
+FROM ruby:2.5.3-alpine3.7
 
 # Minimal requirements to run a Rails app
 RUN apk add --no-cache --update build-base \
@@ -15,6 +15,12 @@ RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSI
     && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
 
 WORKDIR /rpg-master-api
+
+ENV BUNDLE_PATH=/bundle/ruby-${RUBY_VERSION} \
+    BUNDLE_BIN=/bundle/ruby-${RUBY_VERSION}/bin \
+    GEM_HOME=/bundle/ruby-${RUBY_VERSION} \
+    BUNDLE_CACHE_PATH=/bundle/ruby-${RUBY_VERSION}/cache
+ENV PATH="${BUNDLE_BIN}:${PATH}"
 
 EXPOSE 3000
 

@@ -4,7 +4,7 @@
 
 # Symlink the log file to stdout for Docker
 echo "⚰  Symlinking to /code/log/$RAILS_ENV.log"
-ln -sf /dev/stdout /rpg_master_api/log/$RAILS_ENV.log
+ln -sf /dev/stdout /rpg-master-api/log/$RAILS_ENV.log
 
 echo "🤖🤖🤖🤖🤖🤖🤖🤖🤖🤖🤖🤖🤖 $RAILS_ENV 🤖🤖🤖🤖🤖🤖🤖🤖🤖🤖🤖🤖🤖"
 

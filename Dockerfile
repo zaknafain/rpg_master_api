@@ -14,10 +14,10 @@ RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSI
     && tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
     && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
 
-WORKDIR /rpg_master_api
+WORKDIR /rpg-master-api
 
 EXPOSE 3000
 
-COPY docker-entrypoint.sh /rpg_master_api/docker-entrypoint.sh
-RUN chmod a+x /rpg_master_api/docker-entrypoint.sh
-ENTRYPOINT ["/rpg_master_api/docker-entrypoint.sh"]
+COPY docker-entrypoint.sh /rpg-master-api/docker-entrypoint.sh
+RUN chmod a+x /rpg-master-api/docker-entrypoint.sh
+ENTRYPOINT ["/rpg-master-api/docker-entrypoint.sh"]

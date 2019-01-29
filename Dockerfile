@@ -4,7 +4,6 @@ FROM ruby:2.6.0-alpine3.7
 RUN apk add --no-cache --update build-base \
                                 linux-headers \
                                 tzdata \
-                                bash \
                                 mysql-dev
 
 # Added some more for CCI 2.0

@@ -1,6 +1,7 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
+
 # if RAILS_ENV was NOT set before then default to development
-[[ -z "$RAILS_ENV" ]] && export RAILS_ENV=development
+[ -z "$RAILS_ENV" ] && export RAILS_ENV=development
 
 # Symlink the log file to stdout for Docker
 echo "⚰  Symlinking to /code/log/$RAILS_ENV.log"

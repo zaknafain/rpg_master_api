@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :user do
     sequence(:name)       { |n| "Person #{n}" }
-    sequence(:email)      { |n| "person_#{n}@example.com"}
+    sequence(:email)      { |n| "person_#{n}@example.com" }
     password              { 'foobar Z' }
     password_confirmation { 'foobar Z' }
     locale                { I18n.available_locales.sample }

@@ -1,10 +1,14 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 ENV['RAILS_ENV'] ||= 'test'
 
-require File.expand_path('../../config/environment', __FILE__)
+require File.expand_path('../config/environment', __dir__)
 
-abort("The Rails environment is running in production mode!") if Rails.env.production?
+if Rails.env.production?
+  abort('The Rails environment is running in production mode!')
+end
 
 require 'rspec/rails'
 require 'database_cleaner'
@@ -30,47 +34,48 @@ RSpec.configure do |config|
     DatabaseCleaner.clean_with(:truncation)
   end
 
-  config.around(:each) do |example|
+  config.around do |example|
     DatabaseCleaner.cleaning do
       example.run
     end
   end
 end
 
-RSpec::Matchers.define :be_of_correct_schema do |schema_name, owned_id, as_admin|
+RSpec::Matchers.define :be_of_correct_schema do |schema, owned_id, as_admin|
   match do |actual|
     parsed_response = JSON.parse(actual)
     parsed_response = [parsed_response] unless parsed_response.is_a?(Array)
 
     validations = parsed_response.map do |single|
-      schema = load_schema_file(single, schema_name, owned_id, as_admin)
+      schema = load_schema_file(single, schema, owned_id, as_admin)
 
       collect_schema_validations(single, schema)
     end
 
-    validations.flatten.all?{ |v| v == true }
+    validations.flatten.all? { |v| v == true }
   end
 
-  failure_message{ |a| "expected that #{a} would be of schema #{schema_name}" }
+  failure_message { |a| "expected that #{a} would be of schema #{schema}" }
 
-  def load_schema_file(parsed_item, schema_name, owned_id, as_admin)
+  def load_schema_file(parsed_item, schema, owned_id, as_admin)
     if as_admin
-      schema_name = "#{schema_name}_admin"
-    elsif owned_id == parsed_item["id"]
-      schema_name = "#{schema_name}_owner"
+      schema = "#{schema}_admin"
+    elsif owned_id == parsed_item['id']
+      schema = "#{schema}_owner"
     end
 
-    File.read("spec/fixtures/schemas/#{schema_name}.json")
+    File.read("spec/fixtures/schemas/#{schema}.json")
   end
 
   def collect_schema_validations(parsed_response, schema)
-    expected_schema = JSON.parse(schema)["properties"]
+    expected_schema = JSON.parse(schema)['properties']
     keys = (expected_schema.keys + parsed_response.keys).uniq
 
     keys.map do |key|
-      types = expected_schema.dig(key, "types") || [expected_schema.dig(key, "type")]
+      types = expected_schema.dig(key, 'types') ||
+              [expected_schema.dig(key, 'type')]
 
-      types.any?{ |t| t == parsed_response[key].class.to_s }
+      types.any? { |t| t == parsed_response[key].class.to_s }
     end
   end
 end

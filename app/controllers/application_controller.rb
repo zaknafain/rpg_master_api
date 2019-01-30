@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ApplicationController < ActionController::API
   include Knock::Authenticable
 
@@ -11,5 +13,4 @@ class ApplicationController < ActionController::API
   def head_not_found
     head :not_found and return
   end
-
 end

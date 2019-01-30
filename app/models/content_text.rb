@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ContentText < ApplicationRecord
   include VisibilityMethods
 
@@ -12,8 +14,8 @@ class ContentText < ApplicationRecord
     parent.top_hierarchable
   end
 
-  def is_author?(user)
-    parent.is_author?(user)
+  def author?(user)
+    parent.author?(user)
   end
 
   def parent

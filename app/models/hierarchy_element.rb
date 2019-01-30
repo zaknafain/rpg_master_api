@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class HierarchyElement < ApplicationRecord
   include VisibilityMethods
 
@@ -8,21 +10,19 @@ class HierarchyElement < ApplicationRecord
 
   validates :name, presence: true
 
-  scope :of_campaigns, ->{ where hierarchable_type: "Campaign" }
-  scope :alphabetically_ordered, ->{ order(name: :asc) }
-  scope :all_included, ->{ includes(:players_visible_for, :hierarchable) }
+  scope :of_campaigns, -> { where hierarchable_type: 'Campaign' }
+  scope :alphabetically_ordered, -> { order(name: :asc) }
+  scope :all_included, -> { includes(:players_visible_for, :hierarchable) }
 
   def top_hierarchable
     elem = self
 
-    while elem.hierarchable_type == "HierarchyElement"
-       elem = elem.hierarchable
-    end
+    elem = elem.hierarchable while elem.hierarchable_type == 'HierarchyElement'
 
     elem.hierarchable
   end
 
-  def is_author?(user)
+  def author?(user)
     top_hierarchable.user == user
   end
 
@@ -31,6 +31,6 @@ class HierarchyElement < ApplicationRecord
   end
 
   def parent
-    self.hierarchable
+    hierarchable
   end
 end

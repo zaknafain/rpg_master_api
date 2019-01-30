@@ -37,6 +37,9 @@ Style/IpAddresses:
 Style/Documentation:
   Enabled: false
 
+Style/AndOr:
+  Enabled: false
+
 Layout/EndOfLine:
   EnforcedStyle: lf
 

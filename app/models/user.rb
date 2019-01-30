@@ -14,9 +14,9 @@ class User < ApplicationRecord
   has_secure_password
 
   validates :name, presence: true, length: { maximum: 30 }
-  VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
-  validates :email, presence: true, format: { with: VALID_EMAIL_REGEX }, uniqueness: { case_sensitive: false }
-  validates :password, length: { minimum: 8 }, if: :password_length_is_needed?
+  validates :password, length: { minimum: 8 },
+                       if: :password_validation_is_needed?
+  validate  :password_comparison, if: :password_validation_is_needed?
 
   after_validation { errors.messages.delete(:password_digest) }
   before_save :downcase_email
@@ -36,8 +36,14 @@ class User < ApplicationRecord
     self.remember_token = SecureRandom.urlsafe_base64
   end
 
-  def password_length_is_needed?
+  def password_validation_is_needed?
     !(persisted? && password.blank?)
+  end
+
+  def password_comparison
+    return if password == password_confirmation
+
+    errors.add(:password_confirmation, 'passwords_not_matching')
   end
 
   def downcase_email

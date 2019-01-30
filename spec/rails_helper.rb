@@ -41,13 +41,13 @@ RSpec.configure do |config|
   end
 end
 
-RSpec::Matchers.define :be_of_correct_schema do |schema, owned_id, as_admin|
+RSpec::Matchers.define :of_correct_schema? do |name, owned_id, as_admin|
   match do |actual|
     parsed_response = JSON.parse(actual)
     parsed_response = [parsed_response] unless parsed_response.is_a?(Array)
 
     validations = parsed_response.map do |single|
-      schema = load_schema_file(single, schema, owned_id, as_admin)
+      schema = load_schema_file(single, name, owned_id, as_admin)
 
       collect_schema_validations(single, schema)
     end
@@ -55,16 +55,16 @@ RSpec::Matchers.define :be_of_correct_schema do |schema, owned_id, as_admin|
     validations.flatten.all? { |v| v == true }
   end
 
-  failure_message { |a| "expected that #{a} would be of schema #{schema}" }
+  failure_message { |a| "expected that #{a} would be of schema #{name}" }
 
-  def load_schema_file(parsed_item, schema, owned_id, as_admin)
+  def load_schema_file(parsed_item, schema_name, owned_id, as_admin)
     if as_admin
-      schema = "#{schema}_admin"
+      schema_name = "#{schema_name}_admin"
     elsif owned_id == parsed_item['id']
-      schema = "#{schema}_owner"
+      schema_name = "#{schema_name}_owner"
     end
 
-    File.read("spec/fixtures/schemas/#{schema}.json")
+    File.read("spec/fixtures/schemas/#{schema_name}.json")
   end
 
   def collect_schema_validations(parsed_response, schema)

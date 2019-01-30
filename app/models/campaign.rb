@@ -16,7 +16,7 @@ class Campaign < ApplicationRecord
   validates :is_public, inclusion: { in: [true, false] }
 
   scope :are_public, -> { where is_public: true }
-  scope :all_campaigns_for, lambda(user_id) do
+  scope :all_campaigns_for, ->(user_id) do
     where('campaigns.user_id = ? OR campaigns.id IN (?)',
           user_id,
           CampaignsUser.select(:campaign_id).where(user_id: user_id))

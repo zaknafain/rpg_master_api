@@ -40,6 +40,9 @@ Style/Documentation:
 Style/AndOr:
   Enabled: false
 
+Style/Lambda:
+  EnforcedStyle: literal
+
 Layout/EndOfLine:
   EnforcedStyle: lf
 

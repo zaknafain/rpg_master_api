@@ -21,13 +21,9 @@ RSpec.describe UsersController do
           get :index
 
           expect(response.status).to eq(200)
-          expect(
-            response.body.of_correct_schema?(
-              :user,
-              send(current).id,
-              send(current).admin
-            )
-          ).to be(true)
+          expect(response.body).to of_correct_schema?(
+            :user, send(current).id, send(current).admin
+          )
         end
       end
     end
@@ -47,13 +43,9 @@ RSpec.describe UsersController do
           get :show, params: { id: owner.id }
 
           expect(response.status).to eq(200)
-          expect(
-            response.body.of_correct_schema?(
-              :user,
-              send(current).id,
-              send(current).admin
-            )
-          ).to be(true)
+          expect(response.body).to of_correct_schema?(
+            :user, send(current).id, send(current).admin
+          )
         end
       end
     end
@@ -73,13 +65,9 @@ RSpec.describe UsersController do
           get :me
 
           expect(response.status).to eq(200)
-          expect(
-            response.body.of_correct_schema?(
-              :user,
-              send(current).id,
-              send(current).admin
-            )
-          ).to be(true)
+          expect(response.body).to of_correct_schema?(
+            :user, send(current).id, send(current).admin
+          )
         end
       end
     end

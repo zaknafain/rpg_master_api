@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UsersController < ApplicationController
   before_action :authenticate_user
   before_action :authenticate_owner, only: [:update]
@@ -16,7 +18,7 @@ class UsersController < ApplicationController
   end
 
   def update
-    if user_params[:password] == user_params[:password_confirmation] && user.update_attributes(user_params)
+    if user.update_attributes(user_params)
       head :no_content
     else
       head :bad_request
@@ -34,7 +36,9 @@ class UsersController < ApplicationController
   private
 
   def authenticate_owner
-    head :forbidden and return unless current_user.id == user.id || current_user.admin?
+    admin_or_owner = current_user.id == user.id || current_user.admin?
+
+    head(:forbidden) and return unless admin_or_owner
   end
 
   def user
@@ -42,6 +46,8 @@ class UsersController < ApplicationController
   end
 
   def user_params
-    params.require(:user).permit(:password, :password_confirmation, :email, :name, :locale)
+    params.require(:user).permit(
+      :password, :password_confirmation, :email, :name, :locale
+    )
   end
 end

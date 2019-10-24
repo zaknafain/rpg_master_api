@@ -28,5 +28,7 @@ jobs:
       run: |
         gem install bundler
         bundle install --jobs 4 --retry 3
+    - name: DB Init
+      run: bin/rails db:prepare
     - name: Test
       run: bundle exec rspec

@@ -1,4 +1,4 @@
-name: Ruby
+name: Tests
 
 on: [push]
 
@@ -24,7 +24,7 @@ jobs:
         ruby-version: 2.6.x
     - name: Install MySQL
       run: sudo apt-get install -y mysql-client libmysqlclient-dev
-    - name: Build
+    - name: Install Gems
       run: |
         gem install bundler
         bundle install --jobs 4 --retry 3
@@ -35,7 +35,7 @@ jobs:
         MYSQL_PASSWORD: root
         DB_PORT: 3306
       run: bin/rails db:prepare
-    - name: Test
+    - name: Run Tests
       env:
         MYSQL_USERNAME: root
         MYSQL_PASSWORD: root

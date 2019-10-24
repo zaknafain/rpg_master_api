@@ -13,6 +13,8 @@ jobs:
       uses: actions/setup-ruby@v1
       with:
         ruby-version: 2.6.x
+    - name: Set up MySql
+      uses: actions/setup-mysql@v1
     - name: Build
       run: |
         gem install bundler

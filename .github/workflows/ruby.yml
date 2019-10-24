@@ -36,4 +36,8 @@ jobs:
         DB_PORT: 3306
       run: bin/rails db:prepare
     - name: Test
+      env:
+        MYSQL_USERNAME: root
+        MYSQL_PASSWORD: root
+        DB_PORT: 3306
       run: bundle exec rspec

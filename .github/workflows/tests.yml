@@ -1,0 +1,43 @@
+name: Ruby
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+        - 3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Set up Ruby 2.6
+      uses: actions/setup-ruby@v1
+      with:
+        ruby-version: 2.6.x
+    - name: Install MySQL
+      run: sudo apt-get install -y mysql-client libmysqlclient-dev
+    - name: Build
+      run: |
+        gem install bundler
+        bundle install --jobs 4 --retry 3
+    - name: DB Init
+      env:
+        RAILS_ENV: test
+        MYSQL_USERNAME: root
+        MYSQL_PASSWORD: root
+        DB_PORT: 3306
+      run: bin/rails db:prepare
+    - name: Test
+      env:
+        MYSQL_USERNAME: root
+        MYSQL_PASSWORD: root
+        DB_PORT: 3306
+      run: bundle exec rspec

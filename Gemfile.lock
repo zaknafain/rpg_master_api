@@ -76,7 +76,7 @@ GEM
     factory_bot_rails (5.1.1)
       factory_bot (~> 5.1.0)
       railties (>= 4.2.0)
-    ffaker (2.13.0)
+    ffaker (2.14.0)
     ffi (1.9.25)
     globalid (0.4.2)
       activesupport (>= 4.2.0)

@@ -20,7 +20,7 @@ class Campaign < ApplicationRecord
       all
     else
       where(user_id: user_id)
-        .or(where(user_id: CampaignsUser.select(:campaign_id).where(user_id: user_id)))
+        .or(where(id: CampaignsUser.select(:campaign_id).where(user_id: user_id)))
         .or(where(is_public: true))
     end
   end

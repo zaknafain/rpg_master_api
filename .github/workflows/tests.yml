@@ -6,26 +6,29 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    
+
     services:
-      mysql:
-        image: mysql:5.7
+      postgres:
+        image: postgres:9.6.18
         env:
-          MYSQL_ROOT_PASSWORD: root
+          POSTGRES_USER: test-user
+          POSTGRES_PASSWORD: test-pass
         ports:
-        - 3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+        - 5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
     - uses: actions/checkout@v1
-    - name: Set up Ruby 2.6
+    - name: Set up Ruby 2.7
       uses: actions/setup-ruby@v1
       with:
-        ruby-version: 2.6.x
-    - name: Install MySQL
-      run: sudo apt-get update && sudo apt-get install -y mysql-client libmysqlclient-dev
-    - name: Start MySQL
-      run: sudo /etc/init.d/mysql start
+        ruby-version: 2.7.x
+    - name: Install PostgreSQL
+      run: sudo apt-get update && sudo apt-get install -y postgresql-dev=12.3-r2 libpq=12.3-r2
     - name: Install Gems
       run: |
         gem install bundler
@@ -33,13 +36,13 @@ jobs:
     - name: DB Init
       env:
         RAILS_ENV: test
-        MYSQL_USERNAME: root
-        MYSQL_PASSWORD: root
-        DB_PORT: 3306
+        DB_USERNAME: test-user
+        DB_PASSWORD: test-pass
+        DB_PORT: 5432
       run: bin/rails db:prepare
     - name: Run Tests
       env:
-        MYSQL_USERNAME: root
-        MYSQL_PASSWORD: root
-        DB_PORT: 3306
+        DB_USERNAME: test-user
+        DB_PASSWORD: test-pass
+        DB_PORT: 5432
       run: bundle exec rspec

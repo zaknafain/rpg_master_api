@@ -6,6 +6,7 @@ describe Campaign do
   let(:element)  { FactoryBot.create(:hierarchy_element) }
   let(:campaign) { element.hierarchable }
   let(:player)   { FactoryBot.create(:user) }
+  let(:admin)    { FactoryBot.create(:user, :admin) }
 
   before do
     player.campaigns_played << campaign
@@ -33,6 +34,15 @@ describe Campaign do
         expect(visible_campaigns).to     include(public_campaign)
         expect(visible_campaigns).not_to include(owned_campaign)
         expect(visible_campaigns).not_to include(private_campaign)
+      end
+
+      it 'will show all campaigns if the user is an admin' do
+        visible_campaigns = described_class.visible_to(admin)
+
+        expect(visible_campaigns).to include(campaign)
+        expect(visible_campaigns).to include(public_campaign)
+        expect(visible_campaigns).to include(owned_campaign)
+        expect(visible_campaigns).to include(private_campaign)
       end
     end
   end
@@ -80,6 +90,10 @@ describe Campaign do
       author = campaign.user
 
       expect(campaign.visible_to(author)).to eq(true)
+    end
+
+    it 'is allways true to an admin' do
+      expect(campaign.visible_to(admin)).to eq(true)
     end
   end
 end

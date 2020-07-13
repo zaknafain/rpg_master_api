@@ -16,14 +16,19 @@ class Campaign < ApplicationRecord
   validates :is_public, inclusion: { in: [true, false] }
 
   scope :visible_to, ->(user_id) do
-    where(user_id: user_id)
-      .or(where(user_id: CampaignsUser.select(:campaign_id).where(user_id: user_id)))
-      .or(where(is_public: true))
+    if User.find_by(id: user_id)&.admin?
+      all
+    else
+      where(user_id: user_id)
+        .or(where(user_id: CampaignsUser.select(:campaign_id).where(user_id: user_id)))
+        .or(where(is_public: true))
+    end
   end
 
   def visible_to(user = nil)
     is_public? ||
       players.include?(user) ||
-      self.user == user
+      self.user == user ||
+      user&.admin? == true
   end
 end

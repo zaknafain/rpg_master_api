@@ -34,14 +34,14 @@ jobs:
     - name: DB Init
       env:
         RAILS_ENV: test
-        DB_HOST: postgres
+        DB_HOST: localhost
         DB_PORT: 5432
         DB_USERNAME: test-user
         DB_PASSWORD: test-pass
       run: bin/rails db:prepare
     - name: Run Tests
       env:
-        DB_HOST: postgres
+        DB_HOST: localhost
         DB_PORT: 5432
         DB_USERNAME: test-user
         DB_PASSWORD: test-pass

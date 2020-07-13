@@ -34,13 +34,15 @@ jobs:
     - name: DB Init
       env:
         RAILS_ENV: test
+        DB_HOST: postgres
+        DB_PORT: 5432
         DB_USERNAME: test-user
         DB_PASSWORD: test-pass
-        DB_PORT: 5432
       run: bin/rails db:prepare
     - name: Run Tests
       env:
+        DB_HOST: postgres
+        DB_PORT: 5432
         DB_USERNAME: test-user
         DB_PASSWORD: test-pass
-        DB_PORT: 5432
       run: bundle exec rspec

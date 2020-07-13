@@ -1,7 +1,7 @@
 development:
   adapter: postgresql
   database: rpg-master-development
-  host: db
+  host: <%= ENV['DB_HOST'] %>
   port: <%= ENV['DB_PORT'] %>
   pool: 5
   username: <%= ENV['DB_USERNAME'] %>
@@ -10,7 +10,7 @@ development:
 test:
   adapter: postgresql
   database: rpg-master-test
-  host: db
+  host: <%= ENV['DB_HOST'] %>
   port: <%= ENV['DB_PORT'] %>
   pool: 5
   username: <%= ENV['DB_USERNAME'] %>

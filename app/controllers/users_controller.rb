@@ -2,7 +2,7 @@
 
 class UsersController < ApplicationController
   before_action :authenticate_user
-  before_action :authenticate_owner, only: [:update]
+  before_action :authenticate_owner, only: [:update, :destory]
   before_action :authenticate_admin, only: [:destroy]
 
   def index

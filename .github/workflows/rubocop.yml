@@ -1,0 +1,31 @@
+name: Rubocop
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Set up Ruby 2.7
+      uses: actions/setup-ruby@v1
+      with:
+        ruby-version: 2.7.x
+    - name: Ruby gem cache
+      uses: actions/cache@v2
+      with:
+        path: vendor/bundle
+        key: ${{ runner.os }}-gems-${{ hashFiles('**/.ruby-version') }}-${{ hashFiles('**/Gemfile.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-gems-${{ hashFiles('**/.ruby-version') }}-
+          ${{ runner.os }}-gems-
+    - name: Install Gems
+      run: |
+        gem install bundler
+        bundle config set path 'vendor/bundle'
+        bundle install --jobs 4 --retry 3
+    - name: Run Rubocop
+      run: rubocop

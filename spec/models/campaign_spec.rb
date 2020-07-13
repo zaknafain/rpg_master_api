@@ -13,23 +13,26 @@ describe Campaign do
 
   describe 'scopes' do
     describe 'visible_to user' do
-      let!(:owned_campaign) { FactoryBot.create(:campaign, user: player) }
+      let!(:owned_campaign) { FactoryBot.create(:campaign, user: player, is_public: false) }
       let!(:public_campaign) { FactoryBot.create(:campaign) }
       let!(:private_campaign) { FactoryBot.create(:campaign, is_public: false) }
 
       it 'will show public, owned and played campaigns' do
-        expect(
-          described_class.visible_to(player.id)
-        ).to include(campaign)
-        expect(
-          described_class.visible_to(player.id)
-        ).to include(owned_campaign)
-        expect(
-          described_class.visible_to(player.id)
-        ).to include(public_campaign)
-        expect(
-          described_class.visible_to(player.id)
-        ).not_to include(private_campaign)
+        visible_campaigns = described_class.visible_to(player.id)
+
+        expect(visible_campaigns).to     include(campaign)
+        expect(visible_campaigns).to     include(owned_campaign)
+        expect(visible_campaigns).to     include(public_campaign)
+        expect(visible_campaigns).not_to include(private_campaign)
+      end
+
+      it 'will show public campaigns if the user is nil' do
+        visible_campaigns = described_class.visible_to(nil)
+
+        expect(visible_campaigns).to     include(campaign)
+        expect(visible_campaigns).to     include(public_campaign)
+        expect(visible_campaigns).not_to include(owned_campaign)
+        expect(visible_campaigns).not_to include(private_campaign)
       end
     end
   end

@@ -1,6 +1,7 @@
 # RPGMaster API
 
 [![Depfu](https://badges.depfu.com/badges/566158abd22388e1b9476df7036651dc/overview.svg)](https://depfu.com/github/zaknafain/rpg-master-api?project=Bundler)
+[![Github](https://github.com/zaknafain/rpg-master-api/workflows/Tests/badge.svg)](https://github.com/zaknafain/rpg-master-api/workflows/Tests/badge.svg)
 
 The API for RPGMaster is written in ruby with rails and covers the following:
 

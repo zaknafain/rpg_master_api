@@ -13,8 +13,7 @@ jobs:
         env:
           POSTGRES_USER: test-user
           POSTGRES_PASSWORD: test-pass
-        ports:
-        - 5432
+        ports: ["5432:5432"]
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -27,6 +26,14 @@ jobs:
       uses: actions/setup-ruby@v1
       with:
         ruby-version: 2.7.x
+    - name: Ruby gem cache
+      uses: actions/cache@v1
+      with:
+        path: vendor/bundle
+        key: ${{ runner.os }}-gems-${{ hashFiles('**/.ruby-version') }}-${{ hashFiles('**/Gemfile.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-gems-${{ hashFiles('**/.ruby-version') }}-
+          ${{ runner.os }}-gems-
     - name: Install Gems
       run: |
         gem install bundler

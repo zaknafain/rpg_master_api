@@ -1,0 +1,22 @@
+{
+  "title": "Campaign",
+  "description": "A campaign with basic attributes",
+  "type": "object",
+  "properties": {
+    "description": {
+      "type": "String"
+    },
+    "id": {
+      "type": "Integer"
+    },
+    "name": {
+      "type": "String"
+    },
+    "isPublic": {
+      "types": ["TrueClass", "FalseClass"]
+    },
+    "shortDescription": {
+      "types": ["String", "NilClass"]
+    }
+  }
+}

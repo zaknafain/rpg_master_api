@@ -21,13 +21,14 @@ jobs:
           --health-retries 5
 
     steps:
-    - uses: actions/checkout@v1
+    - name: Checkout code
+      uses: actions/checkout@v1
     - name: Set up Ruby 2.7
       uses: actions/setup-ruby@v1
       with:
         ruby-version: 2.7.x
     - name: Ruby gem cache
-      uses: actions/cache@v1
+      uses: actions/cache@v2020-07-13
       with:
         path: vendor/bundle
         key: ${{ runner.os }}-gems-${{ hashFiles('**/.ruby-version') }}-${{ hashFiles('**/Gemfile.lock') }}

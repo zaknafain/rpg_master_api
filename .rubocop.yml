@@ -91,6 +91,9 @@ Naming/PredicateName:
     - def_node_matcher
     - def_node_search
 
+RSpec/ExampleLength:
+  Max: 7
+
 RSpec/NestedGroups:
   Max: 7
 

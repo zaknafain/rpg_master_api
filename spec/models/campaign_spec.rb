@@ -11,48 +11,26 @@ describe Campaign do
     player.campaigns_played << campaign
   end
 
-  describe 'all_campaigns_for user' do
-    let!(:campaign_2) { FactoryBot.create(:campaign, user: player) }
-    let!(:campaign_3) { FactoryBot.create(:campaign) }
+  describe 'scopes' do
+    describe 'visible_to user' do
+      let!(:owned_campaign) { FactoryBot.create(:campaign, user: player) }
+      let!(:public_campaign) { FactoryBot.create(:campaign) }
+      let!(:private_campaign) { FactoryBot.create(:campaign, is_public: false) }
 
-    it 'will show owned and played campaigns' do
-      expect(
-        described_class.all_campaigns_for(player.id)
-      ).to include(campaign)
-      expect(
-        described_class.all_campaigns_for(player.id)
-      ).to include(campaign_2)
-      expect(
-        described_class.all_campaigns_for(player.id)
-      ).not_to include(campaign_3)
-    end
-
-    it 'will show only owned campaigns if there are no played' do
-      user = campaign.user
-
-      expect(
-        described_class.all_campaigns_for(user.id)
-      ).to include(campaign)
-      expect(
-        described_class.all_campaigns_for(user.id)
-      ).not_to include(campaign_2)
-      expect(
-        described_class.all_campaigns_for(user.id)
-      ).not_to include(campaign_3)
-    end
-
-    it 'will show no campaigns if there are no played or owned' do
-      user = FactoryBot.create(:user)
-
-      expect(
-        described_class.all_campaigns_for(user.id)
-      ).not_to include(campaign)
-      expect(
-        described_class.all_campaigns_for(user.id)
-      ).not_to include(campaign_2)
-      expect(
-        described_class.all_campaigns_for(user.id)
-      ).not_to include(campaign_3)
+      it 'will show public, owned and played campaigns' do
+        expect(
+          described_class.visible_to(player.id)
+        ).to include(campaign)
+        expect(
+          described_class.visible_to(player.id)
+        ).to include(owned_campaign)
+        expect(
+          described_class.visible_to(player.id)
+        ).to include(public_campaign)
+        expect(
+          described_class.visible_to(player.id)
+        ).not_to include(private_campaign)
+      end
     end
   end
 

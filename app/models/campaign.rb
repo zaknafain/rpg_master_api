@@ -15,11 +15,10 @@ class Campaign < ApplicationRecord
   validates :short_description, length: { maximum: 1000 }
   validates :is_public, inclusion: { in: [true, false] }
 
-  scope :are_public, -> { where is_public: true }
-  scope :all_campaigns_for, ->(user_id) do
-    where('campaigns.user_id = ? OR campaigns.id IN (?)',
-          user_id,
-          CampaignsUser.select(:campaign_id).where(user_id: user_id))
+  scope :visible_to, ->(user_id) do
+    where(user_id: user_id)
+      .or(where(user_id: CampaignsUser.select(:campaign_id).where(user_id: user_id)))
+      .or(where(is_public: true))
   end
 
   def visible_to(user = nil)

@@ -1,34 +1,28 @@
+# frozen_string_literal: true
+
 source 'https://rubygems.org'
 
 git_source(:github) do |repo_name|
-  repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?("/")
+  repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?('/')
   "https://github.com/#{repo_name}.git"
 end
 
-gem 'rails'
-gem 'mysql2'
-gem 'puma'
+gem 'active_model_serializers', require: true
 gem 'bcrypt'
-gem 'rack-cors', :require => 'rack/cors'
 gem 'knock'
-gem "active_model_serializers", require: true
+gem 'pg'
+gem 'puma'
+gem 'rack-cors', require: 'rack/cors'
+gem 'rails'
 
 gem 'ffaker'
 
-# Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-# gem 'jbuilder', '~> 2.5'
-# Use Redis adapter to run Action Cable in production
-# gem 'redis', '~> 3.0'
-
-# Use Capistrano for deployment
-# gem 'capistrano-rails', group: :development
-
 group :development, :test do
+  gem 'database_cleaner'
+  gem 'factory_bot_rails'
+  gem 'pry-rails'
   gem 'rspec-rails'
   gem 'rspec_junit_formatter'
-  gem 'factory_bot_rails'
-  gem 'database_cleaner'
-  gem 'pry-rails'
 end
 
 group :development do

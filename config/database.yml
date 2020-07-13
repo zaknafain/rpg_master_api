@@ -1,15 +1,17 @@
 development:
-  adapter: mysql2
+  adapter: postgresql
   database: rpg-master-development
-  host: <%= ENV['MYSQL_HOST'] %>
+  host: db
+  port: <%= ENV['DB_PORT'] %>
   pool: 5
-  username: <%= ENV['MYSQL_USERNAME'] %>
-  password: <%= ENV['MYSQL_PASSWORD'] %>
+  username: <%= ENV['DB_USERNAME'] %>
+  password: <%= ENV['DB_PASSWORD'] %>
 
 test:
-  adapter: mysql2
+  adapter: postgresql
   database: rpg-master-test
-  host: <%= ENV['MYSQL_HOST'] %>
+  host: db
+  port: <%= ENV['DB_PORT'] %>
   pool: 5
-  username: <%= ENV['MYSQL_USERNAME'] %>
-  password: <%= ENV['MYSQL_PASSWORD'] %>
+  username: <%= ENV['DB_USERNAME'] %>
+  password: <%= ENV['DB_PASSWORD'] %>

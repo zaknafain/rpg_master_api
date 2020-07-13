@@ -62,7 +62,7 @@ Layout/ClassStructure:
       - protected_methods
       - private_methods
 
-Layout/IndentHeredoc:
+Layout/HeredocIndentation:
   EnforcedStyle: powerpack
 
 # Trailing white space is meaningful in code examples
@@ -95,12 +95,17 @@ Metrics/ModuleLength:
   Exclude:
     - 'spec/**/*.rb'
 
-Performance/Caller:
-  Exclude:
-    - spec/rubocop/cop/performance/caller_spec.rb
-
 RSpec/PredicateMatcher:
   EnforcedStyle: explicit
 
 RSpec/NestedGroups:
   Max: 7
+
+Style/HashEachMethods:
+  Enabled: true
+
+Style/HashTransformKeys:
+  Enabled: true
+
+Style/HashTransformValues:
+  Enabled: true

@@ -68,12 +68,12 @@ describe Campaign do
 
   describe 'visible_to' do
     before do
-      campaign.update_attributes(is_public: false)
+      campaign.update(is_public: false)
     end
 
     describe 'nil user' do
       it 'is true to public campaigns' do
-        campaign.update_attributes(is_public: true)
+        campaign.update(is_public: true)
 
         expect(campaign.visible_to).to eq(true)
       end

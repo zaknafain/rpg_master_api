@@ -68,7 +68,7 @@ describe HierarchyElement do
       end
 
       it 'is false to public elements children to private elements' do
-        element_c.update_attributes(visibility: :for_everyone)
+        element_c.update(visibility: :for_everyone)
 
         expect(element_c.visible_to).to eq(false)
       end
@@ -102,7 +102,7 @@ describe HierarchyElement do
       end
 
       it 'is false for elements children of author elements' do
-        element_a.update_attributes(visibility: :author_only)
+        element_a.update(visibility: :author_only)
 
         expect(element_a.visible_to(player)).to eq(false)
         expect(element_b.visible_to(player)).to eq(false)

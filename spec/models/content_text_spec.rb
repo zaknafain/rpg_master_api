@@ -69,13 +69,13 @@ describe ContentText do
       end
 
       it 'is false to public texts of public elements of private campaigns' do
-        campaign.update_attributes(is_public: false)
+        campaign.update(is_public: false)
 
         expect(content_text.visible_to).to eq(false)
       end
 
       it 'is false to public texts of private elements' do
-        element.update_attributes(visibility: :for_all_players)
+        element.update(visibility: :for_all_players)
 
         expect(content_text.visible_to).to eq(false)
       end
@@ -87,13 +87,13 @@ describe ContentText do
       end
 
       it 'is true for players' do
-        content_text.update_attributes(visibility: :for_all_players)
+        content_text.update(visibility: :for_all_players)
 
         expect(content_text.visible_to(player)).to eq(true)
       end
 
       it 'is true for some' do
-        content_text.update_attributes(visibility: :for_some)
+        content_text.update(visibility: :for_some)
 
         expect(content_text.visible_to(player)).to eq(false)
 
@@ -103,7 +103,7 @@ describe ContentText do
       end
 
       it 'is false for elements children of author elements' do
-        element.update_attributes(visibility: :author_only)
+        element.update(visibility: :author_only)
 
         expect(content_text.visible_to(player)).to eq(false)
       end
@@ -111,8 +111,8 @@ describe ContentText do
 
     it 'is allways true to the owner of the campaign' do
       author = campaign.user
-      element.update_attributes(visibility: :author_only)
-      content_text.update_attributes(visibility: :author_only)
+      element.update(visibility: :author_only)
+      content_text.update(visibility: :author_only)
 
       expect(content_text.visible_to(author)).to eq(true)
     end

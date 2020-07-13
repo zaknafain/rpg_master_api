@@ -18,7 +18,7 @@ class UsersController < ApplicationController
   end
 
   def update
-    if user.update_attributes(user_params)
+    if user.update(user_params)
       head :no_content
     else
       head :bad_request

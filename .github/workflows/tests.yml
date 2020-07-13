@@ -37,6 +37,7 @@ jobs:
     - name: Install Gems
       run: |
         gem install bundler
+        bundle config set path 'vendor/bundle'
         bundle install --jobs 4 --retry 3
     - name: DB Init
       env:

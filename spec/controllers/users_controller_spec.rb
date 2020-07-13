@@ -16,7 +16,7 @@ RSpec.describe UsersController do
 
           expect(response.status).to eq(200)
           expect(response.body).to of_correct_schema?(
-            :user, send(current).id, send(current).admin
+            :user, send(current).id, send(current).admin?
           )
         end
       end
@@ -38,7 +38,7 @@ RSpec.describe UsersController do
 
           expect(response.status).to eq(200)
           expect(response.body).to of_correct_schema?(
-            :user, send(current).id, send(current).admin
+            :user, send(current).id, send(current).admin?
           )
         end
       end

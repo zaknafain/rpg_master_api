@@ -8,12 +8,6 @@ RSpec.describe UsersController do
   let(:admin) { FactoryBot.create(:user, :admin) }
 
   describe 'GET index' do
-    before do
-      user
-      owner
-      admin
-    end
-
     %i[user owner admin].each do |current|
       describe "as #{current}" do
         it 'returns all users as json' do
@@ -79,6 +73,37 @@ RSpec.describe UsersController do
     end
   end
 
+  describe 'POST create' do
+    let(:user_params) do
+      { name: 'Created Name', email: 'new.email@created.de', password: 'password', password_confirmation: 'password' }
+    end
+
+    it 'creates a user with valid data' do
+      post :create, params: { user: user_params }
+
+      expect(response.status).to eq(201)
+      expect(User.last&.name).to eq('Created Name')
+      expect(User.last&.email).to eq('new.email@created.de')
+    end
+
+    it 'responds with a jwt token' do
+      post :create, params: { user: user_params }
+
+      expect(response.body).to include('jwt')
+
+      body = JSON.parse(response.body)
+      jwt = body['jwt']
+      decoded_jwt = JWT.decode(
+        jwt,
+        Rails.application.secrets.secret_key_base,
+        true,
+        algorithm: 'HS256'
+      )
+
+      expect(decoded_jwt[0]).to include('name' => 'Created Name')
+    end
+  end
+
   describe 'PUT update' do
     it 'updates the requested attributes' do
       request.headers.merge! auth_header(owner)
@@ -127,11 +152,8 @@ RSpec.describe UsersController do
   end
 
   describe 'DELETE destroy' do
-    before do
-      owner
-    end
-
     it 'as normal user it returns not allowed' do
+      owner # init
       request.headers.merge! auth_header(user)
       delete :destroy, params: { id: owner.id }
 
@@ -146,6 +168,7 @@ RSpec.describe UsersController do
     end
 
     it 'as admin it returns no content and destroys the user' do
+      owner # init
       request.headers.merge! auth_header(admin)
 
       expect do

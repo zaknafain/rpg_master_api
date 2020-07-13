@@ -10,41 +10,7 @@ AllCops:
     - 'vendor/**/*'
     - 'spec/fixtures/**/*'
     - 'tmp/**/*'
-  TargetRubyVersion: 2.6
-
-Naming/PredicateName:
-  # Method define macros for dynamically generated method.
-  MethodDefinitionMacros:
-    - define_method
-    - define_singleton_method
-    - def_node_matcher
-    - def_node_search
-
-Style/FrozenStringLiteralComment:
-  EnforcedStyle: always
-
-Style/FormatStringToken:
-  # Because we parse a lot of source codes from strings. Percent arrays
-  # look like unannotated format string tokens to this cop.
-  Exclude:
-    - spec/**/*
-
-Style/IpAddresses:
-  # The test for this cop includes strings that would cause offenses
-  Exclude:
-  - spec/rubocop/cop/style/ip_addresses_spec.rb
-
-Style/Documentation:
-  Enabled: false
-
-Style/AndOr:
-  Enabled: false
-
-Style/Lambda:
-  EnforcedStyle: literal
-
-Layout/EndOfLine:
-  EnforcedStyle: lf
+  TargetRubyVersion: 2.7
 
 Layout/ClassStructure:
   Enabled: true
@@ -62,8 +28,17 @@ Layout/ClassStructure:
       - protected_methods
       - private_methods
 
+Layout/EmptyLinesAroundAttributeAccessor:
+  Enabled: true
+
+Layout/EndOfLine:
+  EnforcedStyle: lf
+
 Layout/HeredocIndentation:
-  EnforcedStyle: powerpack
+  Enabled: true
+
+Layout/SpaceAroundMethodCallOperator:
+  Enabled: true
 
 # Trailing white space is meaningful in code examples
 Layout/TrailingWhitespace:
@@ -73,17 +48,29 @@ Lint/AmbiguousBlockAssociation:
   Exclude:
     - 'spec/**/*.rb'
 
+Lint/BooleanSymbol:
+  Enabled: false
+
+Lint/DeprecatedOpenSSLConstant:
+  Enabled: true
+
 Lint/InterpolationCheck:
   Exclude:
     - 'spec/**/*.rb'
+
+Lint/MixedRegexpCaptureTypes:
+  Enabled: true
+
+Lint/RaiseException:
+  Enabled: true
+
+Lint/StructNewOverride:
+  Enabled: true
 
 Lint/UselessAccessModifier:
   MethodCreatingMethods:
     - 'def_matcher'
     - 'def_node_matcher'
-
-Lint/BooleanSymbol:
-  Enabled: false
 
 Metrics/BlockLength:
   Exclude:
@@ -95,11 +82,43 @@ Metrics/ModuleLength:
   Exclude:
     - 'spec/**/*.rb'
 
-RSpec/PredicateMatcher:
-  EnforcedStyle: explicit
+Naming/PredicateName:
+  # Method define macros for dynamically generated method.
+  MethodDefinitionMacros:
+    - define_method
+    - define_singleton_method
+    - def_node_matcher
+    - def_node_search
 
 RSpec/NestedGroups:
   Max: 7
+
+RSpec/PredicateMatcher:
+  EnforcedStyle: explicit
+
+Style/AccessorGrouping:
+  Enabled: true
+
+Style/AndOr:
+  Enabled: false
+
+Style/BisectedAttrAccessor:
+  Enabled: true
+
+Style/Documentation:
+  Enabled: false
+
+Style/ExponentialNotation:
+  Enabled: true
+
+Style/FormatStringToken:
+  # Because we parse a lot of source codes from strings. Percent arrays
+  # look like unannotated format string tokens to this cop.
+  Exclude:
+    - spec/**/*
+
+Style/FrozenStringLiteralComment:
+  EnforcedStyle: always
 
 Style/HashEachMethods:
   Enabled: true
@@ -108,4 +127,27 @@ Style/HashTransformKeys:
   Enabled: true
 
 Style/HashTransformValues:
+  Enabled: true
+
+Style/IpAddresses:
+  # The test for this cop includes strings that would cause offenses
+  Exclude:
+  - spec/rubocop/cop/style/ip_addresses_spec.rb
+
+Style/Lambda:
+  EnforcedStyle: literal
+
+Style/RedundantAssignment:
+  Enabled: true
+
+Style/RedundantFetchBlock:
+  Enabled: true
+
+Style/RedundantRegexpCharacterClass:
+  Enabled: true
+
+Style/RedundantRegexpEscape:
+  Enabled: true
+
+Style/SlicingWithRange:
   Enabled: true

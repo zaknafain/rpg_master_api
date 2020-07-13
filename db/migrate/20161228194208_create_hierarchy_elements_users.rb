@@ -5,7 +5,7 @@ class CreateHierarchyElementsUsers < ActiveRecord::Migration[5.1]
       t.index :user_id
     end
 
-    add_index :hierarchy_elements_users, [:hierarchy_element_id, :user_id], unique: true,
-              name: 'hierarchy_elements_users_uniqueness'
+    add_index :hierarchy_elements_users, %i[hierarchy_element_id user_id], unique: true,
+                                                                           name: 'hierarchy_elements_users_uniqueness'
   end
 end

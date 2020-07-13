@@ -9,6 +9,6 @@ class CreateHierarchyElements < ActiveRecord::Migration[5.1]
     end
 
     add_reference :hierarchy_elements, :hierarchable, polymorphic: true,
-                  index: { name: 'index_hierachy_elements_on_hierarchable' }
+                                                      index: { name: 'index_hierachy_elements_on_hierarchable' }
   end
 end

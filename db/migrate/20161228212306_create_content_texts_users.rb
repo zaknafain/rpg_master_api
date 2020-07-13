@@ -5,7 +5,7 @@ class CreateContentTextsUsers < ActiveRecord::Migration[5.1]
       t.index :user_id
     end
 
-    add_index :content_texts_users, [:content_text_id, :user_id], unique: true,
-              name: 'content_texts_users_uniqueness'
+    add_index :content_texts_users, %i[content_text_id user_id], unique: true,
+                                                                 name: 'content_texts_users_uniqueness'
   end
 end

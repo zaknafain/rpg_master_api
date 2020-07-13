@@ -5,6 +5,6 @@ class CreateCampaignsUsers < ActiveRecord::Migration[5.1]
       t.integer :user_id,     null: false
     end
 
-    add_index :campaigns_users, [:campaign_id, :user_id], unique: true
+    add_index :campaigns_users, %i[campaign_id user_id], unique: true
   end
 end

@@ -6,53 +6,44 @@ describe Campaign do
   let(:element)  { FactoryBot.create(:hierarchy_element) }
   let(:campaign) { element.hierarchable }
   let(:player)   { FactoryBot.create(:user) }
+  let(:admin)    { FactoryBot.create(:user, :admin) }
 
   before do
     player.campaigns_played << campaign
   end
 
-  describe 'all_campaigns_for user' do
-    let!(:campaign_2) { FactoryBot.create(:campaign, user: player) }
-    let!(:campaign_3) { FactoryBot.create(:campaign) }
+  describe 'scopes' do
+    describe 'visible_to user' do
+      let!(:owned_campaign) { FactoryBot.create(:campaign, user: player, is_public: false) }
+      let!(:public_campaign) { FactoryBot.create(:campaign) }
+      let!(:private_campaign) { FactoryBot.create(:campaign, is_public: false) }
 
-    it 'will show owned and played campaigns' do
-      expect(
-        described_class.all_campaigns_for(player.id)
-      ).to include(campaign)
-      expect(
-        described_class.all_campaigns_for(player.id)
-      ).to include(campaign_2)
-      expect(
-        described_class.all_campaigns_for(player.id)
-      ).not_to include(campaign_3)
-    end
+      it 'will show public, owned and played campaigns' do
+        visible_campaigns = described_class.visible_to(player.id)
 
-    it 'will show only owned campaigns if there are no played' do
-      user = campaign.user
+        expect(visible_campaigns).to     include(campaign)
+        expect(visible_campaigns).to     include(owned_campaign)
+        expect(visible_campaigns).to     include(public_campaign)
+        expect(visible_campaigns).not_to include(private_campaign)
+      end
 
-      expect(
-        described_class.all_campaigns_for(user.id)
-      ).to include(campaign)
-      expect(
-        described_class.all_campaigns_for(user.id)
-      ).not_to include(campaign_2)
-      expect(
-        described_class.all_campaigns_for(user.id)
-      ).not_to include(campaign_3)
-    end
+      it 'will show public campaigns if the user is nil' do
+        visible_campaigns = described_class.visible_to(nil)
 
-    it 'will show no campaigns if there are no played or owned' do
-      user = FactoryBot.create(:user)
+        expect(visible_campaigns).to     include(campaign)
+        expect(visible_campaigns).to     include(public_campaign)
+        expect(visible_campaigns).not_to include(owned_campaign)
+        expect(visible_campaigns).not_to include(private_campaign)
+      end
 
-      expect(
-        described_class.all_campaigns_for(user.id)
-      ).not_to include(campaign)
-      expect(
-        described_class.all_campaigns_for(user.id)
-      ).not_to include(campaign_2)
-      expect(
-        described_class.all_campaigns_for(user.id)
-      ).not_to include(campaign_3)
+      it 'will show all campaigns if the user is an admin' do
+        visible_campaigns = described_class.visible_to(admin)
+
+        expect(visible_campaigns).to include(campaign)
+        expect(visible_campaigns).to include(public_campaign)
+        expect(visible_campaigns).to include(owned_campaign)
+        expect(visible_campaigns).to include(private_campaign)
+      end
     end
   end
 
@@ -99,6 +90,10 @@ describe Campaign do
       author = campaign.user
 
       expect(campaign.visible_to(author)).to eq(true)
+    end
+
+    it 'is allways true to an admin' do
+      expect(campaign.visible_to(admin)).to eq(true)
     end
   end
 end

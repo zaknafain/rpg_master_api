@@ -65,12 +65,6 @@ describe User do
     end
   end
 
-  it 'remember token will get created on save' do
-    user.save!
-
-    expect(user.remember_token.blank?).to be(false)
-  end
-
   describe 'destroy' do
     let(:element) do
       FactoryBot.create(

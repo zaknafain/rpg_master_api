@@ -30,7 +30,6 @@ class User < ApplicationRecord
 
   after_validation { errors.messages.delete(:password_digest) }
   before_save :downcase_email
-  before_save :create_remember_token
 
   def to_token_payload
     { sub: id, name: name }
@@ -45,10 +44,6 @@ class User < ApplicationRecord
   end
 
   private
-
-  def create_remember_token
-    self.remember_token = SecureRandom.urlsafe_base64
-  end
 
   def password_validation_is_needed?
     !(persisted? && password.blank?)

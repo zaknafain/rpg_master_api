@@ -91,4 +91,189 @@ RSpec.describe CampaignsController do
       expect(response.body).to include(private_campaign.name)
     end
   end
+
+  describe 'POST create' do
+    let(:create_params) do
+      {
+        name: 'Foo Campaign',
+        short_description: 'Super short',
+        description: 'Somewhat longer description',
+        is_public: false
+      }
+    end
+
+    it 'needs authentication' do
+      post :create, params: { campaign: create_params }
+
+      expect(response.status).to eq(401)
+    end
+
+    it 'returns status 201 and the created campaign' do
+      request.headers.merge! auth_header(owner)
+      post :create, params: { campaign: create_params }
+
+      expect(response.status).to eq(201)
+      expect(response.body).to of_correct_schema?(:campaign, owner.id, owner.admin?)
+    end
+
+    it 'creates a new campaign for the signed in user with the given parameters' do
+      request.headers.merge! auth_header(owner)
+
+      expect { post :create, params: { campaign: create_params } }.to change(Campaign, :count).by(1)
+
+      campaign = Campaign.last
+      expect(campaign.user_id).to eq(owner.id)
+      create_params.each do |key, value|
+        expect(campaign.send(key)).to eq(value)
+      end
+    end
+
+    it 'returns a bad request status on invalid campaigns' do
+      request.headers.merge! auth_header(owner)
+
+      post :create, params: { campaign: create_params.except(:name) }
+
+      expect(response.status).to eq(400)
+      expect(response.body.empty?).to be_truthy
+    end
+
+    it 'does not create any campaign on invalid params' do
+      request.headers.merge! auth_header(owner)
+
+      expect { post :create, params: { campaign: create_params.except(:name) } }.not_to change(Campaign, :count)
+    end
+
+    it 'does not allow to create campaigns for other users' do
+      request.headers.merge! auth_header(owner)
+
+      params = create_params.merge(user_id: user.id)
+      expect { post :create, params: { campaign: params } }.to change(Campaign, :count).by(1)
+      campaign = Campaign.last
+
+      expect(campaign.user_id).to eq(owner.id)
+    end
+  end
+
+  describe 'PUT update' do
+    let(:update_params) do
+      {
+        name: 'Foo Campaign',
+        short_description: 'Super short',
+        description: 'Somewhat longer description',
+        is_public: true
+      }
+    end
+
+    it 'needs authentication' do
+      put :update, params: { id: owned_campaign.id, campaign: update_params }
+
+      expect(response.status).to eq(401)
+    end
+
+    it 'returns status 204' do
+      request.headers.merge! auth_header(owner)
+      put :update, params: { id: owned_campaign.id, campaign: update_params }
+
+      expect(response.status).to eq(204)
+    end
+
+    it 'updates the campaign for the signed in owner with the given parameters' do
+      request.headers.merge! auth_header(owner)
+
+      put :update, params: { id: owned_campaign.id, campaign: update_params }
+
+      owned_campaign.reload
+      update_params.each do |key, value|
+        expect(owned_campaign.send(key)).to eq(value)
+      end
+    end
+
+    it 'returns a bad request status on invalid campaigns' do
+      request.headers.merge! auth_header(owner)
+
+      put :update, params: { id: owned_campaign.id, campaign: update_params.merge(name: '') }
+
+      expect(response.status).to eq(400)
+    end
+
+    it 'does not update the campaign on invalid params' do
+      request.headers.merge! auth_header(owner)
+
+      put :update, params: { id: owned_campaign.id, campaign: update_params.merge(name: '') }
+
+      owned_campaign.reload
+      update_params.each do |key, value|
+        expect(owned_campaign.send(key)).not_to eq(value)
+      end
+    end
+
+    it 'does not allow to update campaigns for other users' do
+      request.headers.merge! auth_header(owner)
+
+      put :update, params: { id: private_campaign.id, campaign: update_params }
+
+      private_campaign.reload
+      update_params.each do |key, value|
+        expect(private_campaign.send(key)).not_to eq(value)
+      end
+      expect(response.status).to eq(404)
+    end
+
+    it 'does allow admins to update campaigns for other users' do
+      request.headers.merge! auth_header(admin)
+
+      put :update, params: { id: owned_campaign.id, campaign: update_params }
+
+      owned_campaign.reload
+      update_params.each do |key, value|
+        expect(owned_campaign.send(key)).to eq(value)
+      end
+      expect(response.status).to eq(204)
+    end
+
+    it 'does not allow to update the user_id' do
+      request.headers.merge! auth_header(owner)
+
+      params = update_params.merge(user_id: user.id)
+      put :update, params: { id: owned_campaign.id, campaign: params }
+      owned_campaign.reload
+
+      expect(owned_campaign.user_id).to eq(owner.id)
+    end
+  end
+
+  describe 'DELETE destroy' do
+    it 'needs authentication' do
+      delete :destroy, params: { id: owned_campaign.id }
+
+      expect(response.status).to eq(401)
+    end
+
+    it 'returns status 204' do
+      request.headers.merge! auth_header(owner)
+      delete :destroy, params: { id: owned_campaign.id }
+
+      expect(response.status).to eq(204)
+    end
+
+    it 'destroys the requested campaign' do
+      request.headers.merge! auth_header(owner)
+
+      expect { delete :destroy, params: { id: owned_campaign.id } }.to change(Campaign, :count).by(-1)
+    end
+
+    it 'does not allow do destroy campaigns of other users' do
+      request.headers.merge! auth_header(owner)
+
+      expect { delete :destroy, params: { id: private_campaign.id } }.not_to change(Campaign, :count)
+      expect(response.status).to eq(404)
+    end
+
+    it 'does allow admins do destroy campaigns of other users' do
+      request.headers.merge! auth_header(admin)
+
+      expect { delete :destroy, params: { id: owned_campaign.id } }.to change(Campaign, :count).by(-1)
+      expect(response.status).to eq(204)
+    end
+  end
 end

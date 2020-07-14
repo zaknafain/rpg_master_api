@@ -13,10 +13,10 @@ class CampaignsController < ApplicationController
   end
 
   def create
-    new_campaign = current_user.create_campaign(campaign_params)
+    new_campaign = current_user.campaigns.build(campaign_params)
 
-    if new_campaign.valid?
-      render json: campaign, status: :created
+    if new_campaign.save
+      render json: new_campaign, status: :created
     else
       head :bad_request
     end

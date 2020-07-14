@@ -52,7 +52,7 @@ class UsersController < ApplicationController
   end
 
   def user
-    @user ||= User.find(params['id'].to_i)
+    @user ||= User.find(params['id'])
   end
 
   def user_params

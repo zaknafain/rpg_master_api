@@ -102,9 +102,22 @@ RSpec.describe UsersController do
 
       expect(decoded_jwt[0]).to include('name' => 'Created Name')
     end
+
+    it 'does not allow to set the admin flag' do
+      post :create, params: { user: user_params.merge(admin: true) }
+
+      new_user = User.last
+      expect(new_user.admin).to be_falsey
+    end
   end
 
   describe 'PUT update' do
+    it 'needs authentication' do
+      put :update, params: { id: owner.id, user: { name: 'New Name' } }
+
+      expect(response.status).to eq(401)
+    end
+
     it 'updates the requested attributes' do
       request.headers.merge! auth_header(owner)
 
@@ -129,17 +142,19 @@ RSpec.describe UsersController do
       expect(response.status).to eq(400)
     end
 
-    it 'needs authentication' do
-      put :update, params: { id: owner.id, user: { name: 'New Name' } }
-
-      expect(response.status).to eq(401)
-    end
-
     it 'does not update if wrong user reqested' do
       request.headers.merge! auth_header(user)
       put :update, params: { id: owner.id, user: { name: 'New Name' } }
 
       expect(response.status).to eq(403)
+    end
+
+    it 'does not update the admin flag if not requested by an admin' do
+      request.headers.merge! auth_header(user)
+      put :update, params: { id: owner.id, user: { admin: true } }
+
+      user.reload
+      expect(user.admin).to be_falsey
     end
 
     it 'updates the user when requested by an admin' do

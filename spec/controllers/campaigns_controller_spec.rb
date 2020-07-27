@@ -121,7 +121,7 @@ RSpec.describe CampaignsController do
 
       expect { post :create, params: { campaign: create_params } }.to change(Campaign, :count).by(1)
 
-      campaign = Campaign.last
+      campaign = Campaign.order(created_at: :asc).last
       expect(campaign.user_id).to eq(owner.id)
       create_params.each do |key, value|
         expect(campaign.send(key)).to eq(value)
@@ -148,7 +148,7 @@ RSpec.describe CampaignsController do
 
       params = create_params.merge(user_id: user.id)
       expect { post :create, params: { campaign: params } }.to change(Campaign, :count).by(1)
-      campaign = Campaign.last
+      campaign = Campaign.order(created_at: :asc).last
 
       expect(campaign.user_id).to eq(owner.id)
     end

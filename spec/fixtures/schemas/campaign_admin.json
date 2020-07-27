@@ -17,6 +17,9 @@
     },
     "shortDescription": {
       "types": ["String", "NilClass"]
+    },
+    "userId": {
+      "types": ["Integer", "NilClass"]
     }
   }
 }

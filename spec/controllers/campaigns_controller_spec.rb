@@ -17,6 +17,7 @@ RSpec.describe CampaignsController do
 
       expect(response.status).to eq(200)
       expect(response.body).to of_correct_schema?(:campaign, nil, false)
+      expect(response.body).not_to include(public_campaign.user_id.to_s)
     end
 
     it 'returns public, played and owned campaigns' do

@@ -55,9 +55,9 @@ end
 def make_hierarchy_elements
   puts 'Create hierarchy elements'
   Campaign.all.each do |campaign|
-    (0..10).to_a.sample.times do |i|
+    (0..10).to_a.sample.times do
       element = create_hierarchy_element!(campaign)
-      (0..5).to_a.sample.times do |j|
+      (0..5).to_a.sample.times do
         create_hierarchy_element!(element)
       end
     end

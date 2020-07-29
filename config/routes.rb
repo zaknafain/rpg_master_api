@@ -8,4 +8,5 @@ Rails.application.routes.draw do
   end
 
   resources :campaigns, except: %i[new edit]
+  resources :hierarchy_elements, except: %i[show new edit]
 end

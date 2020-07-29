@@ -116,5 +116,13 @@ describe ContentText do
 
       expect(content_text.visible_to(author)).to eq(true)
     end
+
+    it 'is allways true to an admin' do
+      admin = FactoryBot.create(:user, :admin)
+      element.update(visibility: :author_only)
+      content_text.update(visibility: :author_only)
+
+      expect(content_text.visible_to(admin)).to eq(true)
+    end
   end
 end

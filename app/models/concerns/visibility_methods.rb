@@ -21,10 +21,13 @@ module VisibilityMethods
 
   def visible_to(user = nil)
     parent.visible_to(user) &&
-      (for_everyone? ||
-       author?(user) ||
-       visible_to_player?(user) ||
-       visible_for_some?(user))
+      (
+        for_everyone? ||
+        author?(user) ||
+        visible_to_player?(user) ||
+        visible_for_some?(user) ||
+        user&.admin? == true
+      )
   end
 
   def visible_to_player?(player)

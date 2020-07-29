@@ -116,5 +116,13 @@ describe HierarchyElement do
       expect(element_b.visible_to(author)).to eq(true)
       expect(element_c.visible_to(author)).to eq(true)
     end
+
+    it 'is allways true to an admin' do
+      admin = FactoryBot.create(:user, :admin)
+
+      expect(element_a.visible_to(admin)).to eq(true)
+      expect(element_b.visible_to(admin)).to eq(true)
+      expect(element_c.visible_to(admin)).to eq(true)
+    end
   end
 end

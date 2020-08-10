@@ -1,0 +1,25 @@
+{
+  "title": "HierarchyElement",
+  "description": "A hierarchy element with basic attributes",
+  "type": "object",
+  "properties": {
+    "description": {
+      "type": "String"
+    },
+    "hierarchableId": {
+      "type": "Integer"
+    },
+    "hierarchableType": {
+      "type": "String"
+    },
+    "id": {
+      "type": "Integer"
+    },
+    "name": {
+      "type": "String"
+    },
+    "visibility": {
+      "type": "String"
+    }
+  }
+}

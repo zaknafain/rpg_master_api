@@ -5,8 +5,9 @@ namespace :db do
     make_exorbitant
     make_users
     make_campaigns
-    add_some_players
-    # make_hierarchy_elements
+    assign_players
+    make_hierarchy_elements
+    assign_element_readers
     # make_content_texts
   end
 end
@@ -14,17 +15,13 @@ end
 def make_minimalist
   puts 'Creating minimalist user'
   user = create_user!(name: 'M', email: 'm@i.n', password: 'password', admin: true)
-
-  puts 'Creating minimalist campaign'
   create_campaign!(name: 'C', description: 'Text', is_public: false, short_description: nil, user_id: user.id)
 end
 
 def make_exorbitant
   puts 'Creating exorbitant user'
   user = create_user!(name: 'Maximilian Mustermann', email: 'maximilian.mustermann@exorbitant.co.uk')
-
-  20.times do |n|
-    puts "Creating exorbitant user's campaign no. #{n + 1}"
+  20.times do
     create_campaign!(name: [FFaker::Movie.title, FFaker::Movie.title, FFaker::Movie.title].join(' aka. '),
                      description: random_markdown(100),
                      is_public: true,
@@ -33,49 +30,51 @@ def make_exorbitant
 end
 
 def make_users
+  puts 'Creating users'
   30.times do |n|
-    puts "Creating user no. #{n + 1}"
     create_user!(admin: (n % 10).zero?)
   end
 end
 
 def make_campaigns
-  40.times do |n|
-    puts "Creating campaign no. #{n + 1}"
+  puts 'Creating campaigns'
+  40.times do
     create_campaign!
   end
 end
 
-def add_some_players
+def assign_players
+  puts 'Assign players'
   Campaign.all.each do |campaign|
     players = User.where.not(id: campaign.user_id).sample((0..5).to_a.sample)
-    puts "Add #{players.length} Users to Campaign ##{campaign.id} as Player"
     campaign.players = players
     campaign.save!
   end
 end
 
-# def make_hierarchy_elements
-#   Campaign.all.each do |campaign|
-#     topic_count = (0..10).to_a.sample
-#     topic_count.times do |i|
-#       puts "Creating Hierarchy Top Element #{i} for Campaign ##{campaign.id}"
-#       element = create_hierarchy_element(campaign)
-#       sub_topic_count = (0..5).to_a.sample
-#       sub_topic_count.times do |j|
-#         puts "Creating Hierarchy Sub Element #{j} for Element ##{element.id}"
-#         create_hierarchy_element(element, FFaker::Music.song)
-#       end
-#     end
-#   end
-# end
+def make_hierarchy_elements
+  puts 'Create hierarchy elements'
+  Campaign.all.each do |campaign|
+    (0..10).to_a.sample.times do
+      element = create_hierarchy_element!(campaign)
+      (0..5).to_a.sample.times do
+        create_hierarchy_element!(element)
+      end
+    end
+  end
+end
 
-# def create_hierarchy_element(hierarchable, name = FFaker::Music.genre)
-#   visibility  = %i[for_everyone for_all_players author_only].sample
-#   description = FFaker::Lorem.sentences((0..3).to_a.sample).join(' ')
+def assign_element_readers
+  puts 'Assign hierarchy element readers'
+  HierarchyElement.where(visibility: :for_some).each do |element|
+    players = element.top_hierarchable.players
+    next if players.empty?
 
-#   hierarchable.hierarchy_elements.create(name: name, visibility: visibility, description: description)
-# end
+    players.sample((1..players.length).to_a.sample).each do |player|
+      element.hierarchy_elements_users.create!(user_id: player.id)
+    end
+  end
+end
 
 # def make_content_texts
 #   HierarchyElement.all.each do |element|
@@ -117,6 +116,20 @@ def create_campaign!(campaign_params = {})
   campaign.save!
 
   campaign
+end
+
+def create_hierarchy_element!(hierarchable, element_params = {})
+  params = {
+    name: FFaker::Music.genre,
+    visibility: %i[for_everyone for_all_players for_some author_only].sample,
+    description: random_text(3)
+  }.merge(element_params)
+
+  element = hierarchable.hierarchy_elements.find_or_initialize_by(name: params[:name])
+  element.assign_attributes(params)
+  element.save!
+
+  element
 end
 
 # def create_content_text(element, order)

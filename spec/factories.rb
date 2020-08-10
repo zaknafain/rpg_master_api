@@ -20,6 +20,18 @@ FactoryBot.define do
     name          { FFaker::Movie.title }
     description   { FFaker::Lorem.sentences(15).join(' ') }
     is_public     { true }
+
+    trait :with_elements do
+      hierarchy_elements do
+        %i[author_only for_all_players for_everyone].map do |visibility|
+          association(:hierarchy_element, visibility: visibility)
+        end
+      end
+    end
+
+    trait :with_player do
+      players { [association(:user)] }
+    end
   end
 
   factory :hierarchy_element do

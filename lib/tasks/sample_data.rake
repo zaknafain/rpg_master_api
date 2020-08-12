@@ -8,7 +8,8 @@ namespace :db do
     assign_players
     make_hierarchy_elements
     assign_element_readers
-    # make_content_texts
+    make_content_texts
+    assign_content_readers
   end
 end
 
@@ -67,7 +68,7 @@ end
 def assign_element_readers
   puts 'Assign hierarchy element readers'
   HierarchyElement.where(visibility: :for_some).each do |element|
-    players = element.top_hierarchable.players
+    players = element.players
     next if players.empty?
 
     players.sample((1..players.length).to_a.sample).each do |player|
@@ -76,15 +77,26 @@ def assign_element_readers
   end
 end
 
-# def make_content_texts
-#   HierarchyElement.all.each do |element|
-#     text_count = (0..10).to_a.sample
-#     text_count.times do |i|
-#       puts "Creating ContentText #{i} for HierarchyElement ##{element.id}"
-#       create_content_text(element, i)
-#     end
-#   end
-# end
+def make_content_texts
+  HierarchyElement.all.each do |element|
+    text_count = (0..10).to_a.sample
+    text_count.times do
+      create_content_text!(element)
+    end
+  end
+end
+
+def assign_content_readers
+  puts 'Assign content text readers'
+  ContentText.where(visibility: :for_some).each do |text|
+    players = text.players
+    next if players.empty?
+
+    players.sample((1..players.length).to_a.sample).each do |player|
+      text.content_texts_users.create!(user_id: player.id)
+    end
+  end
+end
 
 def create_user!(user_params = {})
   params = {
@@ -132,13 +144,18 @@ def create_hierarchy_element!(hierarchable, element_params = {})
   element
 end
 
-# def create_content_text(element, order)
-#   visibility = %i[for_everyone for_all_players author_only].sample
+def create_content_text!(element, content_params = {})
+  params = {
+    content: random_markdown,
+    visibility: %i[for_everyone for_all_players for_some author_only].sample,
+    hierarchy_element_id: HierarchyElement.pluck(:id).sample
+  }.merge(content_params)
 
-#   element.content_texts.create(content: random_markdown,
-#                                order: order,
-#                                visibility: visibility)
-# end
+  text = element.content_texts.build(params)
+  text.save!
+
+  text
+end
 
 def random_user
   User.where.not(email: ['maximilian.mustermann@exorbitant.co.uk', 'm@i.n']).sample

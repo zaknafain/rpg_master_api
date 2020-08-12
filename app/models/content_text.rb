@@ -6,6 +6,7 @@ class ContentText < ApplicationRecord
   belongs_to :hierarchy_element
 
   validates :content, presence: true
+  validates :ordering, numericality: { only_integer: true, greater_than_or_equal_to: 0 }, allow_nil: true
   validates :hierarchy_element, presence: true
 
   scope :ordered, -> { order(Arel.sql('ordering IS NULL, ordering ASC')) }

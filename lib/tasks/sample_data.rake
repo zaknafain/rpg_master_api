@@ -1,9 +1,11 @@
 namespace :db do
   desc 'Fill database with sample data'
   task populate: :environment do
-    make_minimalist
-    make_exorbitant
+    make_minimalist_user
+    make_exorbitant_user
     make_users
+    make_minimalist_campaigns
+    make_exorbitant_campaigns
     make_campaigns
     assign_players
     make_hierarchy_elements
@@ -13,27 +15,37 @@ namespace :db do
   end
 end
 
-def make_minimalist
+def make_minimalist_user
   puts 'Creating minimalist user'
-  user = create_user!(name: 'M', email: 'm@i.n', password: 'password', admin: true)
-  create_campaign!(name: 'C', description: 'Text', is_public: false, short_description: nil, user_id: user.id)
+  create_user!(name: 'M', email: 'm@i.n', password: 'password', admin: true)
 end
 
-def make_exorbitant
+def make_exorbitant_user
   puts 'Creating exorbitant user'
-  user = create_user!(name: 'Maximilian Mustermann', email: 'maximilian.mustermann@exorbitant.co.uk')
-  20.times do
-    create_campaign!(name: [FFaker::Movie.title, FFaker::Movie.title, FFaker::Movie.title].join(' aka. '),
-                     description: random_markdown(100),
-                     is_public: true,
-                     user_id: user.id)
-  end
+  create_user!(name: 'Maximilian Mustermann', email: 'maximilian.mustermann@exorbitant.co.uk')
 end
 
 def make_users
   puts 'Creating users'
   30.times do |n|
     create_user!(admin: (n % 10).zero?)
+  end
+end
+
+def make_minimalist_campaigns
+  puts 'Creating minimalist campaigns'
+  user = User.find_by(email: 'm@i.n')
+  create_campaign!(name: 'C', description: 'Text', is_public: false, short_description: nil, user_id: user.id)
+end
+
+def make_exorbitant_campaigns
+  puts 'Creating exorbitant campaigns'
+  user = User.find_by(email: 'maximilian.mustermann@exorbitant.co.uk')
+  20.times do
+    create_campaign!(name: [FFaker::Movie.title, FFaker::Movie.title, FFaker::Movie.title].join(' aka. '),
+                     description: random_markdown(100),
+                     is_public: true,
+                     user_id: user.id)
   end
 end
 

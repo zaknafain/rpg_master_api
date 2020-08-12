@@ -1,0 +1,22 @@
+{
+  "title": "ContentText",
+  "description": "A content text with basic attributes",
+  "type": "object",
+  "properties": {
+    "content": {
+      "type": "String"
+    },
+    "hierarchyElementId": {
+      "type": "Integer"
+    },
+    "id": {
+      "type": "Integer"
+    },
+    "ordering": {
+      "types": ["NilClass", "Integer"]
+    },
+    "visibility": {
+      "type": "String"
+    }
+  }
+}

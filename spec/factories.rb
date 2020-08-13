@@ -32,6 +32,14 @@ FactoryBot.define do
     trait :with_player do
       players { [association(:user)] }
     end
+
+    trait :with_content do
+      hierarchy_elements do
+        %i[author_only for_all_players for_everyone].map do |visibility|
+          association(:hierarchy_element, :with_content, visibility: visibility)
+        end
+      end
+    end
   end
 
   factory :hierarchy_element do
@@ -40,6 +48,14 @@ FactoryBot.define do
     name          { FFaker::Music.genre }
     visibility    { %i[author_only for_all_players for_everyone].sample }
     description   { FFaker::Lorem.sentences((0..3).to_a.sample).join(' ') }
+
+    trait :with_content do
+      content_texts do
+        %i[author_only for_all_players for_everyone].map do |visibility|
+          association(:content_text, visibility: visibility)
+        end
+      end
+    end
   end
 
   factory :content_text do

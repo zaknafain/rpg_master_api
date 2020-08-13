@@ -8,5 +8,7 @@ Rails.application.routes.draw do
   end
 
   resources :campaigns, except: %i[new edit]
-  resources :hierarchy_elements, except: %i[show new edit]
+  resources :hierarchy_elements, except: %i[show new edit] do
+    resources :content_texts, except: %i[show new edit], shallow: true
+  end
 end

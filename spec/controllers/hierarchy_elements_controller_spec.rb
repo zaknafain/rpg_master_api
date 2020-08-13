@@ -126,7 +126,7 @@ RSpec.describe HierarchyElementsController do
       expect(response.status).to eq(401)
     end
 
-    it 'returns status 201 and the created campaign' do
+    it 'returns status 201 and the created element' do
       request.headers.merge! auth_header(owner)
       post :create, params: params
 

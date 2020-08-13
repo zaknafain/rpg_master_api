@@ -1,38 +1,51 @@
 namespace :db do
   desc 'Fill database with sample data'
   task populate: :environment do
-    make_minimalist
-    make_exorbitant
+    make_minimalist_user
+    make_exorbitant_user
     make_users
+    make_minimalist_campaigns
+    make_exorbitant_campaigns
     make_campaigns
     assign_players
     make_hierarchy_elements
     assign_element_readers
-    # make_content_texts
+    make_content_texts
+    assign_content_readers
   end
 end
 
-def make_minimalist
+def make_minimalist_user
   puts 'Creating minimalist user'
-  user = create_user!(name: 'M', email: 'm@i.n', password: 'password', admin: true)
-  create_campaign!(name: 'C', description: 'Text', is_public: false, short_description: nil, user_id: user.id)
+  create_user!(name: 'M', email: 'm@i.n', password: 'password', admin: true)
 end
 
-def make_exorbitant
+def make_exorbitant_user
   puts 'Creating exorbitant user'
-  user = create_user!(name: 'Maximilian Mustermann', email: 'maximilian.mustermann@exorbitant.co.uk')
-  20.times do
-    create_campaign!(name: [FFaker::Movie.title, FFaker::Movie.title, FFaker::Movie.title].join(' aka. '),
-                     description: random_markdown(100),
-                     is_public: true,
-                     user_id: user.id)
-  end
+  create_user!(name: 'Maximilian Mustermann', email: 'maximilian.mustermann@exorbitant.co.uk')
 end
 
 def make_users
   puts 'Creating users'
   30.times do |n|
     create_user!(admin: (n % 10).zero?)
+  end
+end
+
+def make_minimalist_campaigns
+  puts 'Creating minimalist campaigns'
+  user = User.find_by(email: 'm@i.n')
+  create_campaign!(name: 'C', description: 'Text', is_public: false, short_description: nil, user_id: user.id)
+end
+
+def make_exorbitant_campaigns
+  puts 'Creating exorbitant campaigns'
+  user = User.find_by(email: 'maximilian.mustermann@exorbitant.co.uk')
+  20.times do
+    create_campaign!(name: [FFaker::Movie.title, FFaker::Movie.title, FFaker::Movie.title].join(' aka. '),
+                     description: random_markdown(100),
+                     is_public: true,
+                     user_id: user.id)
   end
 end
 
@@ -67,7 +80,7 @@ end
 def assign_element_readers
   puts 'Assign hierarchy element readers'
   HierarchyElement.where(visibility: :for_some).each do |element|
-    players = element.top_hierarchable.players
+    players = element.players
     next if players.empty?
 
     players.sample((1..players.length).to_a.sample).each do |player|
@@ -76,15 +89,26 @@ def assign_element_readers
   end
 end
 
-# def make_content_texts
-#   HierarchyElement.all.each do |element|
-#     text_count = (0..10).to_a.sample
-#     text_count.times do |i|
-#       puts "Creating ContentText #{i} for HierarchyElement ##{element.id}"
-#       create_content_text(element, i)
-#     end
-#   end
-# end
+def make_content_texts
+  HierarchyElement.all.each do |element|
+    text_count = (0..10).to_a.sample
+    text_count.times do
+      create_content_text!(element)
+    end
+  end
+end
+
+def assign_content_readers
+  puts 'Assign content text readers'
+  ContentText.where(visibility: :for_some).each do |text|
+    players = text.players
+    next if players.empty?
+
+    players.sample((1..players.length).to_a.sample).each do |player|
+      text.content_texts_users.create!(user_id: player.id)
+    end
+  end
+end
 
 def create_user!(user_params = {})
   params = {
@@ -132,13 +156,18 @@ def create_hierarchy_element!(hierarchable, element_params = {})
   element
 end
 
-# def create_content_text(element, order)
-#   visibility = %i[for_everyone for_all_players author_only].sample
+def create_content_text!(element, content_params = {})
+  params = {
+    content: random_markdown,
+    visibility: %i[for_everyone for_all_players for_some author_only].sample,
+    hierarchy_element_id: HierarchyElement.pluck(:id).sample
+  }.merge(content_params)
 
-#   element.content_texts.create(content: random_markdown,
-#                                order: order,
-#                                visibility: visibility)
-# end
+  text = element.content_texts.build(params)
+  text.save!
+
+  text
+end
 
 def random_user
   User.where.not(email: ['maximilian.mustermann@exorbitant.co.uk', 'm@i.n']).sample

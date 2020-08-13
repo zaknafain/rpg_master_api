@@ -313,7 +313,19 @@ RSpec.describe ContentTextsController do
       request.headers.merge! auth_header(player)
       patch :reorder, params: params
 
-      expect(response.status).to eq(403)
+      expect(response.status).to eq(401)
+    end
+
+    it 'returns 404 0f the element is not visible' do
+      params = {
+        hierarchy_element_id: invisible_element.id,
+        content_text_order: [in_public_content.id, in_player_content.id, in_invisible_content.id]
+      }
+
+      request.headers.merge! auth_header(user)
+      patch :reorder, params: params
+
+      expect(response.status).to eq(404)
     end
 
     it 'does allow to reorder content for admins' do

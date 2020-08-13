@@ -13,9 +13,9 @@ The API for RPGMaster is written in ruby with rails and covers the following:
 + [x] Added users controller to list, show, create, update and destroy users
 + [x] Added campaign controller to list, show, create, update and destroy campaigns
 + [x] Add hierarchy element controller to list, create, update and destroy hierarchy elements
++ [x] Add content text controller to list, show, create, update and destroy content texts
 
 **ToDo:**
 
-+ [ ] Add content text controller to list, show, create, update and destroy content texts
 + [ ] Add ability to reorder content texts
 + [ ] Add ability to reorder hierarchy elements

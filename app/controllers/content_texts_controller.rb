@@ -19,6 +19,20 @@ class ContentTextsController < ApplicationController
     end
   end
 
+  def reorder
+    contents = hierarchy_element.content_texts
+    head(:bad_request) and return unless reorder_params_matching(contents.map(&:id))
+
+    assign_ordering(contents)
+    ContentText.transaction do
+      raise ActiveRecord::Rollback, 'not valid' unless contents.all?(&:save)
+
+      head :no_content and return
+    end
+
+    head :bad_request
+  end
+
   def update
     if content_text.update(content_params)
       head :no_content
@@ -97,5 +111,20 @@ class ContentTextsController < ApplicationController
 
   def content_params
     params.require(:content_text).permit(:content, :visibility, :ordering)
+  end
+
+  def reorder_params
+    params.permit(content_text_order: []).transform_values { |v| v.map(&:to_i) }
+  end
+
+  def reorder_params_matching(content_ids)
+    content_ids.all? { |id| reorder_params[:content_text_order].include?(id) } &&
+      reorder_params[:content_text_order].all? { |id| content_ids.include?(id) }
+  end
+
+  def assign_ordering(contents)
+    reorder_params[:content_text_order].each_with_index do |id, index|
+      contents.detect { |c| c.id == id }.assign_attributes(ordering: index)
+    end
   end
 end

@@ -263,4 +263,75 @@ RSpec.describe ContentTextsController do
       expect(response.status).to eq(204)
     end
   end
+
+  describe 'PATCH reorder' do
+    let(:params) do
+      {
+        hierarchy_element_id: public_element.id,
+        content_text_order: [pu_public_content.id, pu_player_content.id, pu_invisible_content.id]
+      }
+    end
+
+    it 'needs authentication' do
+      patch :reorder, params: params
+
+      expect(response.status).to eq(401)
+    end
+
+    it 'returns status 204' do
+      request.headers.merge! auth_header(owner)
+      patch :reorder, params: params
+
+      expect(response.status).to eq(204)
+    end
+
+    it 'updates the ordering of the contents' do
+      request.headers.merge! auth_header(owner)
+      patch :reorder, params: params
+
+      expect(pu_public_content.reload.ordering).to eq(0)
+      expect(pu_player_content.reload.ordering).to eq(1)
+      expect(pu_invisible_content.reload.ordering).to eq(2)
+    end
+
+    it 'returns 400 if there is an id missing' do
+      request.headers.merge! auth_header(owner)
+      patch :reorder, params: params.merge(content_text_order: [pu_public_content.id, pu_player_content.id])
+
+      expect(response.status).to eq(400)
+    end
+
+    it 'returns 400 if there are wrong ids' do
+      request.headers.merge! auth_header(owner)
+      params[:content_text_order].push(pl_invisible_content.id)
+      patch :reorder, params: params
+
+      expect(response.status).to eq(400)
+    end
+
+    it 'does not allow to reorder content of another user' do
+      request.headers.merge! auth_header(player)
+      patch :reorder, params: params
+
+      expect(response.status).to eq(403)
+    end
+
+    it 'does allow to reorder content for admins' do
+      request.headers.merge! auth_header(admin)
+      patch :reorder, params: params
+
+      expect(response.status).to eq(204)
+    end
+
+    it 'does not reorder if one content could not save' do
+      pu_public_content.update_attribute(:content, '')
+      request.headers.merge! auth_header(owner)
+      patch :reorder, params: params
+
+      expect(response.status).to eq(400)
+      expect(pu_public_content.reload.ordering).to be(nil)
+      expect(pu_player_content.reload.ordering).to be(nil)
+      expect(pu_invisible_content.reload.ordering).to be(nil)
+    end
+  end
 end

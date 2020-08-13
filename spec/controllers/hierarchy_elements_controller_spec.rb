@@ -186,6 +186,15 @@ RSpec.describe HierarchyElementsController do
 
       expect(response.status).to eq(404)
     end
+
+    it 'returns a 401 if the user does not own the campaign' do
+      request.headers.merge! auth_header(user)
+      post :create, params: {
+        hierarchy_element: create_params, filter: filter_params.merge(hierarchable_id: public_campaign.id)
+      }
+
+      expect(response.status).to eq(401)
+    end
   end
 
   describe 'PUT update' do
@@ -222,12 +231,19 @@ RSpec.describe HierarchyElementsController do
 
     it 'does not allow to update elements for other users' do
       request.headers.merge! auth_header(user)
-      put :update, params: { id: invisible_element.id, hierarchy_element: update_params }
+      put :update, params: { id: public_element.id, hierarchy_element: update_params }
 
       invisible_element.reload
       update_params.each do |key, value|
         expect(invisible_element.send(key)).not_to eq(value)
       end
+      expect(response.status).to eq(401)
+    end
+
+    it 'returns a 404 on not visible elements' do
+      request.headers.merge! auth_header(user)
+      put :update, params: { id: invisible_element.id, hierarchy_element: update_params }
+
       expect(response.status).to eq(404)
     end
 
@@ -268,6 +284,13 @@ RSpec.describe HierarchyElementsController do
     end
 
     it 'does not allow do destroy elements of other users' do
+      request.headers.merge! auth_header(user)
+
+      expect { delete :destroy, params: { id: public_element.id } }.not_to change(HierarchyElement, :count)
+      expect(response.status).to eq(401)
+    end
+
+    it 'returns a 404 on not vilisble elements' do
       request.headers.merge! auth_header(user)
 
       expect { delete :destroy, params: { id: invisible_element.id } }.not_to change(HierarchyElement, :count)

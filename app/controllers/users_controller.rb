@@ -48,7 +48,7 @@ class UsersController < ApplicationController
   def authenticate_owner
     admin_or_owner = current_user.id == user.id || current_user.admin?
 
-    head(:forbidden) and return unless admin_or_owner
+    head(:unauthorized) and return unless admin_or_owner
   end
 
   def user

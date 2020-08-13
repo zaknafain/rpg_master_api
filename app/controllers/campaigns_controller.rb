@@ -43,7 +43,7 @@ class CampaignsController < ApplicationController
   def authenticate_owner
     admin_or_owner = current_user.id == campaign.user_id || current_user.admin?
 
-    head(:forbidden) and return unless admin_or_owner
+    head(:unauthorized) and return unless admin_or_owner
   end
 
   def campaign

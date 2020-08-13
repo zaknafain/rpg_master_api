@@ -147,6 +147,13 @@ RSpec.describe ContentTextsController do
 
       expect(response.status).to eq(404)
     end
+
+    it 'does not allow to create content for not owned campaigns' do
+      request.headers.merge! auth_header(player)
+      post :create, params: { content_text: create_params, hierarchy_element_id: public_element.id }
+
+      expect(response.status).to eq(401)
+    end
   end
 
   describe 'PUT update' do
@@ -182,13 +189,20 @@ RSpec.describe ContentTextsController do
     end
 
     it 'does not allow to update content for other users' do
+      request.headers.merge! auth_header(player)
+      put :update, params: { id: pu_player_content.id, content_text: update_params }
+
+      pu_player_content.reload
+      update_params.each do |key, value|
+        expect(pu_player_content.send(key)).not_to eq(value)
+      end
+      expect(response.status).to eq(401)
+    end
+
+    it 'returns a 404 on not visible content' do
       request.headers.merge! auth_header(user)
       put :update, params: { id: pu_invisible_content.id, content_text: update_params }
 
-      pu_invisible_content.reload
-      update_params.each do |key, value|
-        expect(pu_invisible_content.send(key)).not_to eq(value)
-      end
       expect(response.status).to eq(404)
     end
 
@@ -229,6 +243,13 @@ RSpec.describe ContentTextsController do
     end
 
     it 'does not allow do destroy contents of other users' do
+      request.headers.merge! auth_header(user)
+
+      expect { delete :destroy, params: { id: pu_public_content.id } }.not_to change(ContentText, :count)
+      expect(response.status).to eq(401)
+    end
+
+    it 'returns a 404 on not visible contents' do
       request.headers.merge! auth_header(user)
 
       expect { delete :destroy, params: { id: pu_invisible_content.id } }.not_to change(ContentText, :count)

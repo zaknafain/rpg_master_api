@@ -178,6 +178,13 @@ RSpec.describe CampaignsController do
       expect(response.status).to eq(204)
     end
 
+    it 'returns a 404 on not visible campaigns' do
+      request.headers.merge! auth_header(owner)
+      put :update, params: { id: private_campaign.id, campaign: update_params }
+
+      expect(response.status).to eq(404)
+    end
+
     it 'updates the campaign for the signed in owner with the given parameters' do
       request.headers.merge! auth_header(owner)
 
@@ -211,13 +218,13 @@ RSpec.describe CampaignsController do
     it 'does not allow to update campaigns for other users' do
       request.headers.merge! auth_header(owner)
 
-      put :update, params: { id: private_campaign.id, campaign: update_params }
+      put :update, params: { id: played_campaign.id, campaign: update_params }
 
-      private_campaign.reload
+      played_campaign.reload
       update_params.each do |key, value|
-        expect(private_campaign.send(key)).not_to eq(value)
+        expect(played_campaign.send(key)).not_to eq(value)
       end
-      expect(response.status).to eq(404)
+      expect(response.status).to eq(401)
     end
 
     it 'does allow admins to update campaigns for other users' do

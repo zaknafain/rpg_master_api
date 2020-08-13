@@ -146,7 +146,7 @@ RSpec.describe UsersController do
       request.headers.merge! auth_header(user)
       put :update, params: { id: owner.id, user: { name: 'New Name' } }
 
-      expect(response.status).to eq(403)
+      expect(response.status).to eq(401)
     end
 
     it 'does not update the admin flag if not requested by an admin' do

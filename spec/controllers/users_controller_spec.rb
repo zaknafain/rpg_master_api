@@ -86,6 +86,12 @@ RSpec.describe UsersController do
       expect(User.last&.email).to eq('new.email@created.de')
     end
 
+    it 'returns a 400 and does not create the user with invalid params' do
+      expect { post :create, params: { user: user_params.merge(email: '') } }.not_to change(User, :count)
+
+      expect(response.status).to eq(400)
+    end
+
     it 'responds with a jwt token' do
       post :create, params: { user: user_params }
 
@@ -128,6 +134,18 @@ RSpec.describe UsersController do
       expect(response.status).to eq(204)
       expect(owner.reload.name).to eq('New Name')
       expect(owner.email).to eq('new.email@changed.de')
+    end
+
+    it 'returns a 400 and does not update the user on invalid params' do
+      request.headers.merge! auth_header(owner)
+
+      put :update, params: {
+        id: owner.id, user: { name: '', email: 'new.email@changed.de' }
+      }
+
+      expect(response.status).to eq(400)
+      expect(owner.reload.name).not_to eq('')
+      expect(owner.email).not_to eq('new.email@changed.de')
     end
 
     it 'does not update when the passwords are not the same' do

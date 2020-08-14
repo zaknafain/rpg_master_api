@@ -129,19 +129,12 @@ RSpec.describe CampaignsController do
       end
     end
 
-    it 'returns a bad request status on invalid campaigns' do
-      request.headers.merge! auth_header(owner)
-
-      post :create, params: { campaign: create_params.except(:name) }
-
-      expect(response.status).to eq(400)
-      expect(response.body.empty?).to be_truthy
-    end
-
-    it 'does not create any campaign on invalid params' do
+    it 'returns a 400 and does not create a campaign on invalid params' do
       request.headers.merge! auth_header(owner)
 
       expect { post :create, params: { campaign: create_params.except(:name) } }.not_to change(Campaign, :count)
+
+      expect(response.status).to eq(400)
     end
 
     it 'does not allow to create campaigns for other users' do
@@ -196,15 +189,7 @@ RSpec.describe CampaignsController do
       end
     end
 
-    it 'returns a bad request status on invalid campaigns' do
-      request.headers.merge! auth_header(owner)
-
-      put :update, params: { id: owned_campaign.id, campaign: update_params.merge(name: '') }
-
-      expect(response.status).to eq(400)
-    end
-
-    it 'does not update the campaign on invalid params' do
+    it 'returns a 400 and does not update the campaign on invalid params' do
       request.headers.merge! auth_header(owner)
 
       put :update, params: { id: owned_campaign.id, campaign: update_params.merge(name: '') }
@@ -213,6 +198,7 @@ RSpec.describe CampaignsController do
       update_params.each do |key, value|
         expect(owned_campaign.send(key)).not_to eq(value)
       end
+      expect(response.status).to eq(400)
     end
 
     it 'does not allow to update campaigns for other users' do

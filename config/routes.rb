@@ -9,6 +9,8 @@ Rails.application.routes.draw do
 
   resources :campaigns, except: %i[new edit]
   resources :hierarchy_elements, except: %i[show new edit] do
-    resources :content_texts, except: %i[show new edit], shallow: true
+    resources :content_texts, except: %i[show new edit], shallow: true do
+      patch :reorder, on: :collection
+    end
   end
 end

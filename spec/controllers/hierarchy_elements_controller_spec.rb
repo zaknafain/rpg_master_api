@@ -195,6 +195,14 @@ RSpec.describe HierarchyElementsController do
 
       expect(response.status).to eq(401)
     end
+
+    it 'returns a 400 and does not create an element on invalid params' do
+      params[:hierarchy_element][:name] = ''
+      request.headers.merge! auth_header(owner)
+
+      expect { post :create, params: params }.not_to change(HierarchyElement, :count)
+      expect(response.status).to eq(400)
+    end
   end
 
   describe 'PUT update' do
@@ -256,6 +264,17 @@ RSpec.describe HierarchyElementsController do
         expect(invisible_element.send(key)).to eq(value)
       end
       expect(response.status).to eq(204)
+    end
+
+    it 'returns a 400 and does not update the element with invalid params' do
+      request.headers.merge! auth_header(owner)
+      put :update, params: { id: invisible_element.id, hierarchy_element: update_params.merge(name: '') }
+
+      invisible_element.reload
+      update_params.each do |key, value|
+        expect(invisible_element.send(key)).not_to eq(value)
+      end
+      expect(response.status).to eq(400)
     end
   end
 

@@ -154,6 +154,14 @@ RSpec.describe ContentTextsController do
 
       expect(response.status).to eq(401)
     end
+
+    it 'returns a 400 and does not create content on invalid params' do
+      params[:content_text][:content] = ''
+      request.headers.merge! auth_header(owner)
+
+      expect { post :create, params: params }.not_to change(ContentText, :count)
+      expect(response.status).to eq(400)
+    end
   end
 
   describe 'PUT update' do
@@ -216,6 +224,17 @@ RSpec.describe ContentTextsController do
       end
       expect(response.status).to eq(204)
     end
+
+    it 'returns a 400 and does not update the content on invalid params' do
+      request.headers.merge! auth_header(owner)
+
+      put :update, params: { id: pu_invisible_content.id, content_text: update_params.merge(content: '') }
+      pu_invisible_content.reload
+      update_params.each do |key, value|
+        expect(pu_invisible_content.send(key)).not_to eq(value)
+      end
+      expect(response.status).to eq(400)
+    end
   end
 
   describe 'DELETE destroy' do
@@ -261,6 +280,89 @@ RSpec.describe ContentTextsController do
 
       expect { delete :destroy, params: { id: pu_invisible_content.id } }.to change(ContentText, :count).by(-1)
       expect(response.status).to eq(204)
+    end
+  end
+
+  describe 'PATCH reorder' do
+    let(:params) do
+      {
+        hierarchy_element_id: public_element.id,
+        content_text_order: [pu_public_content.id, pu_player_content.id, pu_invisible_content.id]
+      }
+    end
+
+    it 'needs authentication' do
+      patch :reorder, params: params
+
+      expect(response.status).to eq(401)
+    end
+
+    it 'returns status 204' do
+      request.headers.merge! auth_header(owner)
+      patch :reorder, params: params
+
+      expect(response.status).to eq(204)
+    end
+
+    it 'updates the ordering of the contents' do
+      request.headers.merge! auth_header(owner)
+      patch :reorder, params: params
+
+      expect(pu_public_content.reload.ordering).to eq(0)
+      expect(pu_player_content.reload.ordering).to eq(1)
+      expect(pu_invisible_content.reload.ordering).to eq(2)
+    end
+
+    it 'returns 400 if there is an id missing' do
+      request.headers.merge! auth_header(owner)
+      patch :reorder, params: params.merge(content_text_order: [pu_public_content.id, pu_player_content.id])
+
+      expect(response.status).to eq(400)
+    end
+
+    it 'returns 400 if there are wrong ids' do
+      request.headers.merge! auth_header(owner)
+      params[:content_text_order].push(pl_invisible_content.id)
+      patch :reorder, params: params
+
+      expect(response.status).to eq(400)
+    end
+
+    it 'does not allow to reorder content of another user' do
+      request.headers.merge! auth_header(player)
+      patch :reorder, params: params
+
+      expect(response.status).to eq(401)
+    end
+
+    it 'returns 404 0f the element is not visible' do
+      params = {
+        hierarchy_element_id: invisible_element.id,
+        content_text_order: [in_public_content.id, in_player_content.id, in_invisible_content.id]
+      }
+
+      request.headers.merge! auth_header(user)
+      patch :reorder, params: params
+
+      expect(response.status).to eq(404)
+    end
+
+    it 'does allow to reorder content for admins' do
+      request.headers.merge! auth_header(admin)
+      patch :reorder, params: params
+
+      expect(response.status).to eq(204)
+    end
+
+    it 'does not reorder if one content could not save' do
+      pu_public_content.update_attribute(:content, '')
+      request.headers.merge! auth_header(owner)
+      patch :reorder, params: params
+
+      expect(response.status).to eq(400)
+      expect(pu_public_content.reload.ordering).to be(nil)
+      expect(pu_player_content.reload.ordering).to be(nil)
+      expect(pu_invisible_content.reload.ordering).to be(nil)
     end
   end
 end

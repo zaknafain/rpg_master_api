@@ -42,7 +42,7 @@ end
 RSpec::Matchers.define :of_correct_schema? do |name, owned_id, as_admin|
   match do |actual|
     parsed_response = JSON.parse(actual)
-    parsed_response = [parsed_response] unless parsed_response.is_a?(Array)
+    parsed_response = [parsed_response].flatten
 
     validations = parsed_response.map do |single|
       schema = load_schema_file(single, name, owned_id, as_admin)

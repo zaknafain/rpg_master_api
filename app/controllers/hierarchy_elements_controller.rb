@@ -66,9 +66,10 @@ class HierarchyElementsController < ApplicationController
   end
 
   def hierarchable
-    @hierarchable ||= if hierarchable_type == 'Campaign'
+    @hierarchable ||= case hierarchable_type
+                      when 'Campaign'
                         Campaign.visible_to(current_user&.id).find(hierarchable_id)
-                      elsif hierarchable_type == 'HierarchyElement'
+                      when 'HierarchyElement'
                         find_element(hierarchable_id)
                       else
                         find_element(params[:id])

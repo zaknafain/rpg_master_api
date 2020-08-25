@@ -49,23 +49,53 @@ Lint/AmbiguousBlockAssociation:
   Exclude:
     - 'spec/**/*.rb'
 
+Lint/BinaryOperatorWithIdenticalOperands:
+  Enabled: true
+
 Lint/BooleanSymbol:
   Enabled: false
 
 Lint/DeprecatedOpenSSLConstant:
   Enabled: true
 
+Lint/DuplicateElsifCondition:
+  Enabled: true
+
+Lint/DuplicateRescueException:
+  Enabled: true
+
+Lint/EmptyConditionalBody:
+  Enabled: true
+
+Lint/FloatComparison:
+  Enabled: true
+
 Lint/InterpolationCheck:
   Exclude:
     - 'spec/**/*.rb'
 
+Lint/MissingSuper:
+  Enabled: true
+
 Lint/MixedRegexpCaptureTypes:
+  Enabled: true
+
+Lint/OutOfRangeRegexpRef:
   Enabled: true
 
 Lint/RaiseException:
   Enabled: true
 
+Lint/SelfAssignment:
+  Enabled: true
+
 Lint/StructNewOverride:
+  Enabled: true
+
+Lint/TopLevelReturnWithArgument:
+  Enabled: true
+
+Lint/UnreachableLoop:
   Enabled: true
 
 Lint/UselessAccessModifier:
@@ -94,8 +124,8 @@ Naming/PredicateName:
 RSpec/ExampleLength:
   Max: 7
 
-RSpec/NestedGroups:
-  Max: 7
+RSpec/MultipleMemoizedHelpers:
+  Enabled: false
 
 RSpec/PredicateMatcher:
   EnforcedStyle: explicit
@@ -106,10 +136,19 @@ Style/AccessorGrouping:
 Style/AndOr:
   Enabled: false
 
+Style/ArrayCoercion:
+  Enabled: true
+
 Style/BisectedAttrAccessor:
   Enabled: true
 
+Style/CaseLikeIf:
+  Enabled: true
+
 Style/Documentation:
+  Enabled: false
+
+Style/ExplicitBlockArgument:
   Enabled: false
 
 Style/ExponentialNotation:
@@ -124,7 +163,16 @@ Style/FormatStringToken:
 Style/FrozenStringLiteralComment:
   EnforcedStyle: always
 
+Style/GlobalStdStream:
+  Enabled: true
+
+Style/HashAsLastArrayItem:
+  Enabled: true
+
 Style/HashEachMethods:
+  Enabled: true
+
+Style/HashLikeCase:
   Enabled: true
 
 Style/HashTransformKeys:
@@ -141,10 +189,16 @@ Style/IpAddresses:
 Style/Lambda:
   EnforcedStyle: literal
 
+Style/OptionalBooleanParameter:
+  Enabled: true
+
 Style/RedundantAssignment:
   Enabled: true
 
 Style/RedundantFetchBlock:
+  Enabled: true
+
+Style/RedundantFileExtensionInRequire:
   Enabled: true
 
 Style/RedundantRegexpCharacterClass:
@@ -153,5 +207,11 @@ Style/RedundantRegexpCharacterClass:
 Style/RedundantRegexpEscape:
   Enabled: true
 
+Style/SingleArgumentDig:
+  Enabled: true
+
 Style/SlicingWithRange:
+  Enabled: true
+
+Style/StringConcatenation:
   Enabled: true

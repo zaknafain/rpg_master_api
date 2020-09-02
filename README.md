@@ -1,6 +1,6 @@
 # RPGMaster API
 
-![Depfu](https://badges.depfu.com/badges/566158abd22388e1b9476df7036651dc/overview.svg)
+[![Depfu](https://badges.depfu.com/badges/566158abd22388e1b9476df7036651dc/overview.svg)](https://depfu.com/github/zaknafain/rpg-master-api?project_id=5190)
 ![Tests](https://github.com/zaknafain/rpg-master-api/workflows/Tests/badge.svg?branch=master)
 ![Rubocop](https://github.com/zaknafain/rpg-master-api/workflows/Rubocop/badge.svg?branch=master)
 

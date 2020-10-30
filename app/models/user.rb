@@ -1,22 +1,14 @@
 # frozen_string_literal: true
 
+# Represents the Users Database Model
 class User < ApplicationRecord
   has_many :campaigns, dependent: :destroy
 
-  has_many :campaigns_users
-  has_many :campaigns_played, through: :campaigns_users,
-                              source: :campaign,
-                              dependent: :destroy
+  has_many :campaigns_users,  dependent: :delete_all
+  has_many :campaigns_played, through: :campaigns_users, source: :campaign
 
-  has_many :hierarchy_elements_users
-  has_many :visible_hierarchy_elements, through: :hierarchy_elements_users,
-                                        source: :hierarchy_element,
-                                        dependent: :destroy
-
-  has_many :content_texts_users
-  has_many :visible_content_texts, through: :content_texts_users,
-                                   source: :content_text,
-                                   dependent: :destroy
+  has_many :hierarchy_elements_users, dependent: :delete_all
+  has_many :content_texts_users,      dependent: :delete_all
 
   has_secure_password
 
@@ -60,6 +52,7 @@ class User < ApplicationRecord
   end
 end
 
+# Represents Users which are Admins
 class Admin < User
   default_scope { where(admin: true) }
 end

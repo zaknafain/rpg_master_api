@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Controller for handling the users
 class UsersController < ApplicationController
   before_action :authenticate_user, except: [:create]
   before_action :authenticate_owner, only: [:update]

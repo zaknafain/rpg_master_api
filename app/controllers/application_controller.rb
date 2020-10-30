@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Abstract Controller every other controller inherits from
 class ApplicationController < ActionController::API
   include Knock::Authenticable
 

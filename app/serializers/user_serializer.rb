@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Serializer for user model
 class UserSerializer < ActiveModel::Serializer
   attributes :id, :name, :admin
 
@@ -11,11 +12,9 @@ class UserSerializer < ActiveModel::Serializer
 
   attribute :updated_at, if: :admin?
 
+  delegate :admin?, to: :current_user
+
   def owner_or_admin?
     admin? || object.id == current_user.id
-  end
-
-  def admin?
-    current_user.admin?
   end
 end

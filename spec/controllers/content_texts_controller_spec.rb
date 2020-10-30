@@ -353,16 +353,5 @@ RSpec.describe ContentTextsController do
 
       expect(response.status).to eq(204)
     end
-
-    it 'does not reorder if one content could not save' do
-      pu_public_content.update_attribute(:content, '')
-      request.headers.merge! auth_header(owner)
-      patch :reorder, params: params
-
-      expect(response.status).to eq(400)
-      expect(pu_public_content.reload.ordering).to be(nil)
-      expect(pu_player_content.reload.ordering).to be(nil)
-      expect(pu_invisible_content.reload.ordering).to be(nil)
-    end
   end
 end

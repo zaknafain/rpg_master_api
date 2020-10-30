@@ -11,7 +11,7 @@ gem 'active_model_serializers', require: true
 gem 'bcrypt'
 gem 'knock'
 gem 'pg'
-gem 'puma'
+gem 'puma', '~> 5.0.4'
 gem 'rack-cors', require: 'rack/cors'
 gem 'rails'
 

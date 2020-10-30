@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Shared module concerning visibility of records
 module VisibilityMethods
   extend ActiveSupport::Concern
 
@@ -13,10 +14,8 @@ module VisibilityMethods
 
     validates :visibility, inclusion: { in: ContentText.visibilities.keys }
 
-    has_many :"#{model_name.route_key}_users"
-    has_many :players_visible_for, through: :"#{model_name.route_key}_users",
-                                   source: :user,
-                                   dependent: :destroy
+    has_many :"#{model_name.route_key}_users", dependent: :delete_all
+    has_many :players_visible_for, through: :"#{model_name.route_key}_users", source: :user
   end
 
   def visible_to(user = nil)

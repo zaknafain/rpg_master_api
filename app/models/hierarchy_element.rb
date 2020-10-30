@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Represents a tree structure containig the real content.
 class HierarchyElement < ApplicationRecord
   include VisibilityMethods
 
@@ -14,6 +15,8 @@ class HierarchyElement < ApplicationRecord
   scope :alphabetically_ordered, -> { order(name: :asc) }
   scope :all_included, -> { includes(:players_visible_for, :hierarchable) }
 
+  delegate :players, to: :top_hierarchable
+
   def top_hierarchable
     elem = self
 
@@ -24,10 +27,6 @@ class HierarchyElement < ApplicationRecord
 
   def author?(user)
     top_hierarchable.user == user
-  end
-
-  def players
-    top_hierarchable.players
   end
 
   def parent

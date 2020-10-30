@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Represets the standard contents only containing text.
 class ContentText < ApplicationRecord
   include VisibilityMethods
 
@@ -11,19 +12,14 @@ class ContentText < ApplicationRecord
 
   scope :ordered, -> { order(Arel.sql('ordering IS NULL, ordering ASC')) }
 
+  delegate :author?, to: :parent
+  delegate :players, to: :campaign
+
   def campaign
     parent.top_hierarchable
   end
 
-  def author?(user)
-    parent.author?(user)
-  end
-
   def parent
     hierarchy_element
-  end
-
-  def players
-    campaign.players
   end
 end

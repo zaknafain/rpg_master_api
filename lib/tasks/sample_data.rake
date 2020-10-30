@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :db do
   desc 'Fill database with sample data'
   task populate: :environment do
@@ -111,13 +113,11 @@ def assign_content_readers
 end
 
 def create_user!(user_params = {})
-  params = {
-    name: FFaker::Internet.user_name,
-    email: FFaker::Internet.email,
-    password: FFaker::Internet.password,
-    locale: I18n.available_locales.sample,
-    admin: false
-  }.merge(user_params)
+  params = { name: FFaker::Internet.user_name,
+             email: FFaker::Internet.email,
+             password: FFaker::Internet.password,
+             locale: I18n.available_locales.sample,
+             admin: false }.merge(user_params)
 
   user = User.find_or_initialize_by(email: params[:email])
   user.assign_attributes(params.merge(password_confirmation: params[:password]))
@@ -127,13 +127,11 @@ def create_user!(user_params = {})
 end
 
 def create_campaign!(campaign_params = {})
-  params = {
-    name: FFaker::Movie.title,
-    short_description: random_text(10),
-    description: random_markdown(30),
-    is_public: [true, false].sample,
-    user_id: random_user&.id
-  }.merge(campaign_params)
+  params = { name: FFaker::Movie.title,
+             short_description: random_text(10),
+             description: random_markdown(30),
+             is_public: [true, false].sample,
+             user_id: random_user&.id }.merge(campaign_params)
 
   campaign = Campaign.find_or_initialize_by(name: params[:name])
   campaign.assign_attributes(params)

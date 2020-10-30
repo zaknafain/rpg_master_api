@@ -5,8 +5,8 @@ class Campaign < ApplicationRecord
   attr_accessor :email
 
   belongs_to :user
-  has_many :campaigns_users, dependent: :destroy
-  has_many :players, through: :campaigns_users, source: :user, dependent: :destroy
+  has_many :campaigns_users, dependent: :delete_all
+  has_many :players, through: :campaigns_users, source: :user
   has_many :hierarchy_elements, as: :hierarchable, dependent: :destroy
 
   validates :name, :description, presence: true

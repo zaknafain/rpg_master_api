@@ -3,9 +3,9 @@ FROM ruby:2.7.2-alpine3.12
 # Minimal requirements to run a Rails app
 RUN apk add --no-cache --update build-base=0.5-r2 \
                                 linux-headers=5.4.5-r1 \
-                                tzdata=2020a-r0 \
-                                postgresql-dev=12.3-r2 \
-                                libpq=12.3-r2
+                                tzdata=2020c-r1 \
+                                postgresql-dev=12.5-r0 \
+                                libpq=12.5-r0
 
 ENV BUNDLE_PATH=/bundle/ruby-${RUBY_VERSION} \
     BUNDLE_BIN=/bundle/ruby-${RUBY_VERSION}/bin \

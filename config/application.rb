@@ -23,7 +23,13 @@ Bundler.require(*Rails.groups)
 module RpgMasterApi
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 5.2
+    config.load_defaults 6.0
+
+    # config.autoloader = :zeitwerk
+    # config.action_view.default_enforce_utf8 = false
+    # config.action_dispatch.use_cookies_with_metadata = true
+    # config.action_mailer.delivery_job = "ActionMailer::MailDeliveryJob"
+    # config.active_record.collection_cache_versioning = true
 
     # Configuration for the application, engines, and railties goes here.
     #

@@ -25,7 +25,7 @@ group :development, :test do
   gem 'rspec-rails'
   # Rubocop for linting
   gem 'rubocop', '~> 0.92.0', require: false
-  gem 'rubocop-rails', '~> 2.8.1', require: false
+  gem 'rubocop-rails', '~> 2.9.0', require: false
   gem 'rubocop-rspec', '~> 1.43.1', require: false
 end
 

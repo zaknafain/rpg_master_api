@@ -15,3 +15,9 @@
 /tmp/*
 !/log/.keep
 !/tmp/.keep
+
+/config/credentials/test.key
+
+/config/credentials/development.key
+
+/config/master.key

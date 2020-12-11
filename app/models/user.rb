@@ -20,7 +20,7 @@ class User < ApplicationRecord
                        if: :password_validation_is_needed?
   validate  :password_comparison, if: :password_validation_is_needed?
 
-  after_validation { errors.messages.delete(:password_digest) }
+  after_validation { errors.delete(:password_digest) }
   before_save :downcase_email
 
   def to_token_payload

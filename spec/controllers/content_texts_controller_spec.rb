@@ -328,6 +328,25 @@ RSpec.describe ContentTextsController do
       expect(response.status).to eq(400)
     end
 
+    it 'returns 400 if one of the contents does not save successfully' do
+      request.headers.merge! auth_header(owner)
+      pu_player_content.content = ''
+      pu_player_content.save(validate: false) # break it
+      patch :reorder, params: params
+
+      expect(response.status).to eq(400)
+    end
+
+    it 'returns 400 if one of the contents does not save successfully' do
+      request.headers.merge! auth_header(owner)
+      pu_player_content.content = ''
+      pu_player_content.save(validate: false) # break it
+
+      expect { patch :reorder, params: params }.to_not change(pu_public_content,    :ordering)
+      expect { patch :reorder, params: params }.to_not change(pu_player_content,    :ordering)
+      expect { patch :reorder, params: params }.to_not change(pu_invisible_content, :ordering)
+    end
+
     it 'does not allow to reorder content of another user' do
       request.headers.merge! auth_header(player)
       patch :reorder, params: params

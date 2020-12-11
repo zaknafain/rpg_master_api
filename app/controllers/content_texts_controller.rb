@@ -25,13 +25,14 @@ class ContentTextsController < ApplicationController
     head(:bad_request) and return unless reorder_params_matching(contents.map(&:id))
 
     assign_ordering(contents)
+    status_code = :bad_request
     ContentText.transaction do
       raise ActiveRecord::Rollback, 'not valid' unless contents.all?(&:save)
 
-      head :no_content and return
+      status_code = :no_content
     end
 
-    head :bad_request
+    head status_code
   end
 
   def update

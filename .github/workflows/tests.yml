@@ -23,10 +23,10 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
-    - name: Set up Ruby 2.7
+    - name: Set up Ruby 3.0
       uses: actions/setup-ruby@v1
       with:
-        ruby-version: 2.7.x
+        ruby-version: 3.0.x
     - name: Ruby gem cache
       uses: actions/cache@v2
       with:
